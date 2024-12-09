@@ -1,3 +1,5 @@
+package ders2;
+
 public class VariablesPracticeHome {
     public static void main(String[] args) {
         int age = 25;
