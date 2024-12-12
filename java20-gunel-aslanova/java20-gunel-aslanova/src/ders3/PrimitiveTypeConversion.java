@@ -30,5 +30,7 @@ public class PrimitiveTypeConversion {
         char variable14=(char) variable13;
         System.out.println("varibale14:"+ variable14);
 
+
+
     }
 }
