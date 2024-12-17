@@ -1,4 +1,4 @@
-package ders5;
+package ders5.ders;
 
 public class Bank {
     double balance;
