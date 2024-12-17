@@ -10,7 +10,7 @@ public class Start {
         Product product1=new Product("nar",3.2,49);
 
         product.nameAndPrice(product);
-        product.nameAndPrice(product1);
+        product1.nameAndPrice(product);
 
         product.availableStock(product.stock);
         product1.availableStock(product.stock);
