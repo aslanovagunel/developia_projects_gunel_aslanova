@@ -2,6 +2,7 @@ package ders5.ders;
 
 public class Bank {
     double balance;
+	String name;
 
     void addMoney(double amount){
         balance+=amount;
