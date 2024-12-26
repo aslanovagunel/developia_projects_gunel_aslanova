@@ -7,7 +7,7 @@ public class CalismaEv {
 	public static void main(String[] args) {
 
 		Random r = new Random();
-		int eded = (r.nextInt(20) + 30);
+		int eded = (r.nextInt(21) + 30);
 		System.out.println(eded);
 
 		int num = 64;
@@ -28,6 +28,10 @@ public class CalismaEv {
 
 		System.out.println(yuvarlaqEded);
 
+
+
 	}
+
+
 
 }
