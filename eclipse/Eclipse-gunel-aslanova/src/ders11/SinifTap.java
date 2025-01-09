@@ -11,10 +11,14 @@ public class SinifTap {
 
 	static void method(int... is) {
 		int sum = 0;
-		for (int a : is) {
-			sum += is[a - 1];
+//		for (int a : is) {
+//			sum += is[a - 1];
+//		}
+		for (int i = 0; i < is.length; i++) {
+			sum += is[i];
 		}
 		System.out.println(sum);
 	}
+
 
 }
