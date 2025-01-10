@@ -5,19 +5,18 @@ public class SinifTap {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		SinifTap.method(1, 2, 3, 4, 5);
-
+		double edediOrta =method(1, 2, 3, 4, 5, 5);
+		System.out.println(edediOrta);
 	}
 
-	static void method(int... is) {
-		int sum = 0;
-//		for (int a : is) {
-//			sum += is[a - 1];
-//		}
+	static double method(int... is) {
+		double sum = 0;
+
 		for (int i = 0; i < is.length; i++) {
 			sum += is[i];
 		}
-		System.out.println(sum);
+
+		return (double) sum / is.length;
 	}
 
 
