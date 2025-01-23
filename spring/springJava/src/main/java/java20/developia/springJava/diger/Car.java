@@ -1,4 +1,4 @@
-package java20.developia.springJava;
+package java20.developia.springJava.diger;
 
 public class Car {
 	private String name;
