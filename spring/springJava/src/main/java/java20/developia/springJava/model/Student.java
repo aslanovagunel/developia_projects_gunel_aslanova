@@ -9,26 +9,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
 @Entity
-@Table(name = "books")
-public class Book {
+@Table(name = "students")
+public class Student {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-	private String description;
-	private Double price;
-	private String author;
-	private String color;
-	private Integer pageCount;
-	private Integer quantity;
-	private Double weight;
+	private String surName;
+	private String phone;
+	private String address;
+
 
 
 

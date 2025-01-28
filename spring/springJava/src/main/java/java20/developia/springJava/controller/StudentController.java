@@ -13,30 +13,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java20.developia.springJava.model.Book;
-import java20.developia.springJava.model.BookUpdate;
-import java20.developia.springJava.service.BookService;
+import java20.developia.springJava.model.Student;
+import java20.developia.springJava.model.StudentUpdate;
+import java20.developia.springJava.service.StudentService;
 
 @RestController
-@RequestMapping(path = "/books")
-public class BookController {
-//dependency injection
+@RequestMapping(path = "/students")
+public class StudentController {
+
 	@Autowired
-	private BookService service;
+	private StudentService service;
 
 	@GetMapping
-	public List<Book> findAllBooks() {
-		return service.findAllBooks();
+	public List<Student> getAll() {
+		return service.getAll();
 	}
 
-	@GetMapping(path = "find-word")
-	public List<Book> findWords(@RequestParam(name = "sorgu") String s) {
-		return service.findWords(s);
+	@GetMapping(path = "mini-google")
+	public List<Student> findStudent(@RequestParam(name = "search") String query) {
+		return service.findStudent(query);
+	}
+
+	@GetMapping(path = "/{id}")
+	public Student findById(@PathVariable Integer id) {
+		return service.findById(id);
 	}
 
 	@PostMapping
-	public void add(@RequestBody Book book) {
-		service.add(book);
+	public void addStudent(@RequestBody Student student) {
+		service.addStudent(student);
 	}
 
 	@DeleteMapping(path = "/{id}")
@@ -44,15 +49,10 @@ public class BookController {
 		service.deleteById(id);
 	}
 
-	@GetMapping(path = "/{id}")
-	public Book findById(@PathVariable Integer id) {
-		return service.findById(id);
-	}
-	
-	@PutMapping
-	public void update(@RequestBody BookUpdate bU) {
-		service.update(bU);
-
+//muellime sual
+	@PutMapping(path = "/{id}")
+	public void update(@PathVariable Integer id, @RequestBody StudentUpdate update) {
+		service.update(id, update);
 	}
 
 }
