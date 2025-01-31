@@ -49,7 +49,6 @@ public class StudentController {
 		service.deleteById(id);
 	}
 
-//muellime sual
 	@PutMapping(path = "/{id}")
 	public void update(@PathVariable Integer id, @RequestBody StudentUpdate update) {
 		service.update(id, update);

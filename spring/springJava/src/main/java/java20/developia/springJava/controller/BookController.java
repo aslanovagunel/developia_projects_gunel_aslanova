@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import java20.developia.springJava.model.Book;
 import java20.developia.springJava.model.BookUpdate;
 import java20.developia.springJava.service.BookService;
@@ -35,7 +36,7 @@ public class BookController {
 	}
 
 	@PostMapping
-	public void add(@RequestBody Book book) {
+	public void add(@Valid @RequestBody Book book) {
 		service.add(book);
 	}
 
@@ -52,7 +53,8 @@ public class BookController {
 	@PutMapping
 	public void update(@RequestBody BookUpdate bU) {
 		service.update(bU);
-
 	}
+
+
 
 }
