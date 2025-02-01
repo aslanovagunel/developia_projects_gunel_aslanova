@@ -35,7 +35,7 @@ public class Student {
 
 	@Min(value = 2)
 	@Max(value = 10)
-	private double grade;
+	private int grade;
 
 	@Past
 	private LocalDate birthdate;
