@@ -1,22 +1,24 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.config;
 
 import org.springframework.validation.BindingResult;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 
 public class MyException extends RuntimeException {
 
 	private BindingResult result;
+	private String type;
 
-	public MyException(String message, BindingResult result) {
+
+	public MyException(String message, BindingResult result, String type) {
 		super(message);
 		this.result = result;
+		this.type = type;
 	}
-	
+
+
 }

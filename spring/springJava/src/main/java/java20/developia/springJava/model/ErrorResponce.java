@@ -1,6 +1,6 @@
 package java20.developia.springJava.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -14,5 +14,6 @@ import lombok.NoArgsConstructor;
 public class ErrorResponce {
 	private List<MyFieldError> errors;
 	private String message;
-	private LocalDate date;
+	private String type;
+	private LocalDateTime date;
 }

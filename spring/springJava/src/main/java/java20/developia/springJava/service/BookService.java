@@ -1,16 +1,20 @@
 package java20.developia.springJava.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java20.developia.springJava.model.Book;
-import java20.developia.springJava.model.BookNotFoundException;
+import java20.developia.springJava.MyFileReader;
+import java20.developia.springJava.config.MyException;
+import java20.developia.springJava.model.BookEntity;
+import java20.developia.springJava.model.BookAdd;
+import java20.developia.springJava.model.BookListResponce;
+import java20.developia.springJava.model.BookSingleResponce;
 import java20.developia.springJava.model.BookUpdate;
-import java20.developia.springJava.model.DuplicateResourceException;
-import java20.developia.springJava.model.ResourceNotFoundException;
 import java20.developia.springJava.repository.BookRepository;
 
 @Service
@@ -18,27 +22,48 @@ public class BookService {
 
 	@Autowired
 	private BookRepository repository;
+	
+	@Autowired
+	private MyFileReader fileReader;
 
-	public BookService() {
-		System.out.println("def konstruktor");
+	@Autowired
+	private ModelMapper mapper;
+
+	public BookListResponce findAllBooks() {
+		List<BookEntity> books = repository.findAll();
+		BookListResponce responce = new BookListResponce();
+		List<BookSingleResponce> singleResponces = new ArrayList<BookSingleResponce>();
+
+		for (BookEntity b : books) {
+			BookSingleResponce responce2 = new BookSingleResponce();
+			mapper.map(b, responce2);
+			singleResponces.add(responce2);
+		}
+
+		responce.setBooks(singleResponces);
+		return responce;
+
 	}
-	public BookService(int i) {
-		System.out.println("parametrli konstruktor");
+
+	public BookListResponce findWords(String s) {
+		List<BookEntity> filtered = repository.findAllByNameContaining(s);
+		BookListResponce listResponce = new BookListResponce();
+		List<BookSingleResponce> singleResponces = new ArrayList<BookSingleResponce>();
+
+		for (BookEntity book : filtered) {
+			BookSingleResponce singleResponce = new BookSingleResponce();
+			mapper.map(book, singleResponce);
+			singleResponces.add(singleResponce);
+		}
+		listResponce.setBooks(singleResponces);
+		return listResponce;
 	}
 
-	public List<Book> findAllBooks() {
-		return repository.findAll();
-
-	}
-
-	public List<Book> findWords(String s) {
-		List<Book> filtered = repository.findAllByNameContaining(s);
-		return filtered;
-	}
-
-	public Integer add(Book book) {
-		repository.save(book);
-		return book.getId();
+	public Integer add(BookAdd book) {
+		BookEntity entity = new BookEntity();
+		mapper.map(book, entity);
+		repository.save(entity);
+		return entity.getId();
 
 	}
 
@@ -47,43 +72,33 @@ public class BookService {
 
 	}
 
-	public Book findById(Integer id) {
-		Optional<Book> optional=repository.findById(id);
-		if (optional.isPresent()) {
-			return optional.get();
-		} else {
-			throw new BookNotFoundException("bazada kitab yoxdur");
+	public BookSingleResponce findById(Integer id) throws Exception {
+		Optional<BookEntity> optional=repository.findById(id);
+		String message = fileReader.readFromFile("id-not-found.txt");
+		if (!optional.isPresent()) {
+			throw new MyException(message, null, "id-not-found");
 		}
+		BookSingleResponce singleResponce = new BookSingleResponce();
+		mapper.map(optional.get(), singleResponce);
+		return singleResponce;
 	}
 
-	public void update(BookUpdate bU) {
-		Optional<Book> optional = repository.findById(bU.getId());
-		BookUpdate bookUpdate = new BookUpdate(optional.get().getId(), optional.get().getName(),
-				optional.get().getDescription());
-		if (optional.isPresent() && bU.equals(bookUpdate)) {
-			throw new DuplicateResourceException("eyni melumat gonderdiniz");
+	public void update(BookUpdate bU) throws Exception {
+		Optional<BookEntity> optional = repository.findById(bU.getId());
+	
+		if (!optional.isPresent()) {
+			String message = fileReader.readFromFile("id-not-found.txt");
+			throw new MyException(message, null, "id-not-found");
 		}
-		else {
-			if (!repository.findById(bU.getId()).isPresent()) {
-				throw new ResourceNotFoundException("redakte ucun kitab tapilmadi");
-			}
-			else {
-				Integer id = bU.getId();
-				String name = bU.getName();
-				String description = bU.getDescription();
-	
-				Book book = repository.findById(bU.getId()).get();
-	
-				book.setId(id);
-				book.setName(name);
-				book.setDescription(description);
-	
-				repository.save(book);
-			}
+		
+		BookEntity book = optional.get();
+
+		mapper.map(bU, book);
+		repository.save(book);
+			
 		}
 	}
 
 	
 
-	}
 

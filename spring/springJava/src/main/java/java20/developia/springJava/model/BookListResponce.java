@@ -1,5 +1,7 @@
 package java20.developia.springJava.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyValidationError {
-	private String field;
-	private String message;
+
+public class BookListResponce {
+	private List<BookSingleResponce> books;
+
 }
