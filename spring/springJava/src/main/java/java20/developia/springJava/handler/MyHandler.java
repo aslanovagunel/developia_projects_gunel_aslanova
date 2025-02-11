@@ -1,4 +1,4 @@
-package java20.developia.springJava;
+package java20.developia.springJava.handler;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java20.developia.springJava.config.MyException;
+import java20.developia.springJava.exception.MyException;
 import java20.developia.springJava.model.ErrorResponce;
 import java20.developia.springJava.model.MyFieldError;
 
 @RestControllerAdvice
-public class myHandle {
+public class MyHandler {
 
 	@ExceptionHandler
 	public ErrorResponce myHandleException(MyException e) {

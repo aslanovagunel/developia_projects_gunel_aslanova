@@ -1,4 +1,4 @@
-package java20.developia.springJava;
+package java20.developia.springJava.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

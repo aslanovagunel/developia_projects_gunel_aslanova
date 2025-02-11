@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class BookSingleResponce {
+public class BookSingleResponse {
 	private Integer id;
 
 	private String name;

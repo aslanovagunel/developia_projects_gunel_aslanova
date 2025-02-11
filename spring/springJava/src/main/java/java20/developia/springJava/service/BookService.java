@@ -8,14 +8,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java20.developia.springJava.MyFileReader;
-import java20.developia.springJava.config.MyException;
+import java20.developia.springJava.exception.MyException;
 import java20.developia.springJava.model.BookAdd;
 import java20.developia.springJava.model.BookEntity;
-import java20.developia.springJava.model.BookListResponce;
-import java20.developia.springJava.model.BookSingleResponce;
 import java20.developia.springJava.model.BookUpdate;
 import java20.developia.springJava.repository.BookRepository;
+import java20.developia.springJava.response.BookListResponse;
+import java20.developia.springJava.response.BookSingleResponse;
+import java20.developia.springJava.util.MyFileReader;
 
 @Service
 public class BookService {
@@ -29,13 +29,13 @@ public class BookService {
 	@Autowired
 	private ModelMapper mapper;
 
-	public BookListResponce findAllBooks() {
+	public BookListResponse findAllBooks() {
 		List<BookEntity> books = repository.findAll();
-		BookListResponce responce = new BookListResponce();
-		List<BookSingleResponce> singleResponces = new ArrayList<BookSingleResponce>();
+		BookListResponse responce = new BookListResponse();
+		List<BookSingleResponse> singleResponces = new ArrayList<BookSingleResponse>();
 
 		for (BookEntity b : books) {
-			BookSingleResponce responce2 = new BookSingleResponce();
+			BookSingleResponse responce2 = new BookSingleResponse();
 			mapper.map(b, responce2);
 			singleResponces.add(responce2);
 		}
@@ -45,13 +45,17 @@ public class BookService {
 
 	}
 
-	public BookListResponce findWords(String s) {
+	public BookListResponse findBooks(String s) {
 		List<BookEntity> filtered = repository.findAllByNameContaining(s);
-		BookListResponce listResponce = new BookListResponce();
-		List<BookSingleResponce> singleResponces = new ArrayList<BookSingleResponce>();
+
+		if (filtered.isEmpty()) {
+			throw new MyException("axtarisinizin neticesi yoxdur", null, "search-not-found");
+		}
+		BookListResponse listResponce = new BookListResponse();
+		List<BookSingleResponse> singleResponces = new ArrayList<BookSingleResponse>();
 
 		for (BookEntity book : filtered) {
-			BookSingleResponce singleResponce = new BookSingleResponce();
+			BookSingleResponse singleResponce = new BookSingleResponse();
 			mapper.map(book, singleResponce);
 			singleResponces.add(singleResponce);
 		}
@@ -59,26 +63,30 @@ public class BookService {
 		return listResponce;
 	}
 
-	public Integer add(BookAdd book) {
+	public void add(BookAdd book) {
 		BookEntity entity = new BookEntity();
 		mapper.map(book, entity);
 		repository.save(entity);
-		return entity.getId();
+
 
 	}
 
 	public void deleteById(Integer id) {
+		Optional<BookEntity> byId = repository.findById(id);
+		if (!byId.isPresent()) {
+			throw new MyException("id tapilmadi", null, "id-not-found");
+		}
 		repository.deleteById(id);
 
 	}
 
-	public BookSingleResponce findById(Integer id) throws Exception {
+	public BookSingleResponse findById(Integer id) throws Exception {
 		Optional<BookEntity> optional=repository.findById(id);
 		String message = fileReader.readFromFile("id-not-found.txt");
 		if (!optional.isPresent()) {
 			throw new MyException(message, null, "id-not-found");
 		}
-		BookSingleResponce singleResponce = new BookSingleResponce();
+		BookSingleResponse singleResponce = new BookSingleResponse();
 		mapper.map(optional.get(), singleResponce);
 		return singleResponce;
 	}

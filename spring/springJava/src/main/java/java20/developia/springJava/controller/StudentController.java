@@ -1,8 +1,7 @@
 package java20.developia.springJava.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java20.developia.springJava.model.Student;
+import jakarta.validation.Valid;
+import java20.developia.springJava.exception.MyException;
+import java20.developia.springJava.model.StudentAdd;
 import java20.developia.springJava.model.StudentUpdate;
+import java20.developia.springJava.response.StudentListResponse;
+import java20.developia.springJava.response.StudentSingleResponse;
 import java20.developia.springJava.service.StudentService;
 
 @RestController
@@ -25,22 +28,25 @@ public class StudentController {
 	private StudentService service;
 
 	@GetMapping
-	public List<Student> getAll() {
+	public StudentListResponse getAll() {
 		return service.getAll();
 	}
 
-	@GetMapping(path = "mini-google")
-	public List<Student> findStudent(@RequestParam(name = "search") String query) {
-		return service.findStudent(query);
+	@GetMapping(path = "search")
+	public StudentListResponse findStudent(@RequestParam(name = "query") String query) {
+		return service.findStudents(query);
 	}
 
 	@GetMapping(path = "/{id}")
-	public Student findById(@PathVariable Integer id) {
+	public StudentSingleResponse findById(@PathVariable Integer id) {
 		return service.findById(id);
 	}
 
 	@PostMapping
-	public void addStudent(@RequestBody Student student) {
+	public void addStudent(@Valid @RequestBody StudentAdd student, BindingResult result) {
+		if (result.hasErrors()) {
+			throw new MyException("melumatda problem var", result, "validation");
+		}
 		service.addStudent(student);
 	}
 
@@ -50,7 +56,10 @@ public class StudentController {
 	}
 
 	@PutMapping(path = "/{id}")
-	public void update(@PathVariable Integer id, @RequestBody StudentUpdate update) {
+	public void update(@PathVariable Integer id, @Valid @RequestBody StudentUpdate update, BindingResult result) {
+		if (result.hasErrors()) {
+			throw new MyException("melumatda problem var", result, "validation");
+		}
 		service.update(id, update);
 	}
 

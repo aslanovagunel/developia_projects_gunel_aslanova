@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java20.developia.springJava.model.Student;
+import java20.developia.springJava.model.StudentEntity;
 
-public interface StudentRepository extends JpaRepository<Student, Integer> {
+public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
 
-	List<Student> findAllByPhoneContaining(String phone);
+	List<StudentEntity> findAllByPhoneContaining(String phone);
 }

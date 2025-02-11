@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.response;
 
 import java.util.List;
 
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class BookListResponce {
-	private List<BookSingleResponce> books;
-
+public class LibraryListResponse {
+	private List<LibrarySingleResponse> libraries;
 }

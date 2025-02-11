@@ -15,38 +15,38 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import java20.developia.springJava.config.MyException;
+import java20.developia.springJava.exception.MyException;
 import java20.developia.springJava.model.BookAdd;
-import java20.developia.springJava.model.BookListResponce;
-import java20.developia.springJava.model.BookSingleResponce;
 import java20.developia.springJava.model.BookUpdate;
+import java20.developia.springJava.response.BookListResponse;
+import java20.developia.springJava.response.BookSingleResponse;
 import java20.developia.springJava.service.BookService;
 
 @RestController
 @RequestMapping(path = "/books")
 public class BookController {
-//dependency injection
+
 	@Autowired
 	private BookService service;
-	private BindingResult result;
+
 
 	@GetMapping
-	public BookListResponce findAllBooks() {
+	public BookListResponse findAllBooks() {
 		return service.findAllBooks();
 	}
 
-	@GetMapping(path = "find-word")
-	public BookListResponce findWords(@RequestParam(name = "sorgu") String s) {
-		return service.findWords(s);
+	@GetMapping(path = "search")
+	public BookListResponse findBooks(@RequestParam(name = "query") String s) {
+		return service.findBooks(s);
 	}
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Integer add(@Valid @RequestBody BookAdd book, BindingResult result) {
+	public void add(@Valid @RequestBody BookAdd book, BindingResult result) {
 		if (result.hasErrors()) {
 			throw new MyException("melumat yanlis daxil edilib", result, "validation");
 		}
-		return service.add(book);
+		service.add(book);
 	}
 
 	@DeleteMapping(path = "/{id}")
@@ -55,7 +55,7 @@ public class BookController {
 	}
 
 	@GetMapping(path = "/{id}")
-	public BookSingleResponce findById(@PathVariable Integer id) throws Exception {
+	public BookSingleResponse findById(@PathVariable Integer id) throws Exception {
 		return service.findById(id);
 	}
 	
@@ -69,7 +69,7 @@ public class BookController {
 	}
 
 	@GetMapping(path = "/name/{name}/index/{index}")
-	public BookListResponce demo(@PathVariable Integer index, @PathVariable String name) {
+	public BookListResponse demo(@PathVariable Integer index, @PathVariable String name) {
 
 		if (name.contains("g")) {
 			if (index >= name.length()) {

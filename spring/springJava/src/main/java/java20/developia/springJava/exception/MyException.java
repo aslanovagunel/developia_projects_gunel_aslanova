@@ -1,4 +1,4 @@
-package java20.developia.springJava.config;
+package java20.developia.springJava.exception;
 
 import org.springframework.validation.BindingResult;
 
