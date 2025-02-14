@@ -2,6 +2,7 @@ package java20.developia.springJava.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class BookController {
 
 
 	@GetMapping
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_BOOK')")
 	public BookListResponse findAllBooks() {
 		return service.findAllBooks();
 	}
@@ -42,6 +44,7 @@ public class BookController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
+	@PreAuthorize(value = "hasAuthority('ROLE_ADD_BOOK')")
 	public void add(@Valid @RequestBody BookAdd book, BindingResult result) {
 		if (result.hasErrors()) {
 			throw new MyException("melumat yanlis daxil edilib", result, "validation");
@@ -50,6 +53,7 @@ public class BookController {
 	}
 
 	@DeleteMapping(path = "/{id}")
+	@PreAuthorize(value = "hasAuthority('ROLE_DELETE_BOOK')")
 	public void deleteById(@PathVariable Integer id) {
 		service.deleteById(id);
 	}
@@ -60,6 +64,7 @@ public class BookController {
 	}
 	
 	@PutMapping
+	@PreAuthorize(value = "hasAuthority('ROLE_UPDATE_BOOK')")
 	public void update(@Valid @RequestBody BookUpdate bU, BindingResult result) throws Exception {
 		if(result.hasErrors()) {
 			throw new MyException("validasiya xetasi", result, "validation");
