@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

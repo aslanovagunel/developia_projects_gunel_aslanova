@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentUpdate {
 
-	private Integer id;
-	private String name;
-
+public class MyFieldError {
+	private String field;
+	private String message;
 }

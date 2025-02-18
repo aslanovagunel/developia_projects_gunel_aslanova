@@ -1,8 +1,6 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.request;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,11 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class LibraryUpdate {
-
-	@NotNull
-	@Positive
-	private Integer id;
+public class LibraryAddRequest {
 
 	@Size(min = 2, message = "min 2 setir")
 	@Size(max = 100, message = "max 100 setir")

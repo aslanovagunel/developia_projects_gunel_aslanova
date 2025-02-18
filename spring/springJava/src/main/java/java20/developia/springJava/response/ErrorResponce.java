@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

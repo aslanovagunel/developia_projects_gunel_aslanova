@@ -8,11 +8,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java20.developia.springJava.entity.BookEntity;
 import java20.developia.springJava.exception.MyException;
-import java20.developia.springJava.model.BookAdd;
-import java20.developia.springJava.model.BookEntity;
-import java20.developia.springJava.model.BookUpdate;
 import java20.developia.springJava.repository.BookRepository;
+import java20.developia.springJava.request.BookAddRequest;
+import java20.developia.springJava.request.BookUpdateRequest;
+import java20.developia.springJava.response.BookAddResponse;
 import java20.developia.springJava.response.BookListResponse;
 import java20.developia.springJava.response.BookSingleResponse;
 import java20.developia.springJava.util.MyFileReader;
@@ -29,8 +30,8 @@ public class BookService {
 	@Autowired
 	private ModelMapper mapper;
 
-	public BookListResponse findAllBooks() {
-		List<BookEntity> books = repository.findAll();
+	public BookListResponse findPagination(Integer begin, Integer length) {
+		List<BookEntity> books = repository.findPagination(begin, length);
 		BookListResponse responce = new BookListResponse();
 		List<BookSingleResponse> singleResponces = new ArrayList<BookSingleResponse>();
 
@@ -45,12 +46,9 @@ public class BookService {
 
 	}
 
-	public BookListResponse findBooks(String s) {
+	public BookListResponse search(String s) {
 		List<BookEntity> filtered = repository.findAllByNameContaining(s);
-
-		if (filtered.isEmpty()) {
-			throw new MyException("axtarisinizin neticesi yoxdur", null, "search-not-found");
-		}
+		
 		BookListResponse listResponce = new BookListResponse();
 		List<BookSingleResponse> singleResponces = new ArrayList<BookSingleResponse>();
 
@@ -60,14 +58,17 @@ public class BookService {
 			singleResponces.add(singleResponce);
 		}
 		listResponce.setBooks(singleResponces);
+		BookAddResponse resp=new BookAddResponse();
 		return listResponce;
 	}
 
-	public void add(BookAdd book) {
+	public BookAddResponse add(BookAddRequest req) {
 		BookEntity entity = new BookEntity();
-		mapper.map(book, entity);
+		mapper.map(req, entity);
 		repository.save(entity);
-
+		BookAddResponse resp = new BookAddResponse();
+		resp.setId(entity.getId());
+		return resp;
 
 	}
 
@@ -91,7 +92,7 @@ public class BookService {
 		return singleResponce;
 	}
 
-	public void update(BookUpdate bU) throws Exception {
+	public void update(BookUpdateRequest bU) throws Exception {
 		Optional<BookEntity> optional = repository.findById(bU.getId());
 	
 		if (!optional.isPresent()) {

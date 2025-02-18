@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import java20.developia.springJava.exception.MyException;
-import java20.developia.springJava.model.LibraryAdd;
-import java20.developia.springJava.model.LibraryUpdate;
+import java20.developia.springJava.request.LibraryAddRequest;
+import java20.developia.springJava.request.LibraryUpdateRequest;
 import java20.developia.springJava.response.LibraryListResponse;
 import java20.developia.springJava.service.LibraryService;
 
@@ -32,7 +32,7 @@ public class LibraryController {
 	}
 
 	@PostMapping
-	public void add(@Valid @RequestBody LibraryAdd libraryAdd, BindingResult result) {
+	public void add(@Valid @RequestBody LibraryAddRequest libraryAdd, BindingResult result) {
 		if (result.hasErrors()) {
 			throw new MyException("Melumatda problem var", result,"validation");
 		}
@@ -51,7 +51,7 @@ public class LibraryController {
 	}
 	
 	@PutMapping(path = "/{id}")
-	public void uptadeById(@PathVariable Integer id, @Valid @RequestBody LibraryUpdate libUpdate,
+	public void uptadeById(@PathVariable Integer id, @Valid @RequestBody LibraryUpdateRequest libUpdate,
 			BindingResult result) {
 		if (result.hasErrors()) {
 			throw new MyException("Melumatda problem var", result, "validation");

@@ -1,6 +1,5 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
@@ -12,14 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
 @Entity
-@Table(name = "books")
-public class BookEntity {
+@Table(name = "students1")
+public class StudentEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,22 +25,19 @@ public class BookEntity {
 
 	private String name;
 
-	private String description;
+	private int grade;
 
-	private BigDecimal price;
+	private LocalDate birthdate;
 
-	private String author;
+	private String surName;
 
-	private String color;
-
-	private Integer pageCount;
-
-	private Integer quantity;
-
-	private Double weight;
-
-	private LocalDate date;
+	private String phone;
 
 	private String email;
+
+	private String address;
+
+
+
 
 }

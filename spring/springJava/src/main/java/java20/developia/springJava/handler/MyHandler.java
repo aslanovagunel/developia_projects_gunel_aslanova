@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java20.developia.springJava.exception.MyException;
-import java20.developia.springJava.model.ErrorResponce;
-import java20.developia.springJava.model.MyFieldError;
+import java20.developia.springJava.response.ErrorResponce;
+import java20.developia.springJava.response.MyFieldError;
 
 @RestControllerAdvice
 public class MyHandler {
@@ -24,9 +24,9 @@ public class MyHandler {
 		if (result != null) {
 			List<MyFieldError> myFieldErrors = new ArrayList<MyFieldError>();
 			List<FieldError> fieldErrors = result.getFieldErrors();
-			MyFieldError error = new MyFieldError();
 
 			for (FieldError fieldError : fieldErrors) {
+				MyFieldError error = new MyFieldError();
 				error.setField(fieldError.getField());
 				error.setMessage(fieldError.getDefaultMessage());
 				myFieldErrors.add(error);

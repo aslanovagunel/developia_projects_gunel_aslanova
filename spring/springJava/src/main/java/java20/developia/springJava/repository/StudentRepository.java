@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java20.developia.springJava.model.StudentEntity;
+import java20.developia.springJava.entity.StudentEntity;
 
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
 

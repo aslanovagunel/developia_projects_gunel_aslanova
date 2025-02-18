@@ -1,6 +1,9 @@
 package java20.developia.springJava.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import java20.developia.springJava.exception.MyException;
-import java20.developia.springJava.model.StudentAdd;
-import java20.developia.springJava.model.StudentUpdate;
+import java20.developia.springJava.request.StudentAddRequest;
+import java20.developia.springJava.request.StudentUpdateRequest;
+import java20.developia.springJava.response.StudentAddResponse;
 import java20.developia.springJava.response.StudentListResponse;
 import java20.developia.springJava.response.StudentSingleResponse;
 import java20.developia.springJava.service.StudentService;
+import java20.developia.springJava.util.Constans;
 
 @RestController
 @RequestMapping(path = "/students")
@@ -27,36 +32,40 @@ public class StudentController {
 	@Autowired
 	private StudentService service;
 
-	@GetMapping
-	public StudentListResponse getAll() {
-		return service.getAll();
-	}
-
 	@GetMapping(path = "search")
-	public StudentListResponse findStudent(@RequestParam(name = "query") String query) {
-		return service.findStudents(query);
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_STUDENT')")
+	public ResponseEntity<StudentListResponse> find(@RequestParam(name = "query") String query) {
+		StudentListResponse resp = service.find(query);
+		return new ResponseEntity<StudentListResponse>(resp, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/{id}")
-	public StudentSingleResponse findById(@PathVariable Integer id) {
-		return service.findById(id);
+	@PreAuthorize(value = "hasAuthority('ROLE_GET_BY_ID')")
+	public ResponseEntity<StudentSingleResponse> findById(@PathVariable Integer id) {
+		StudentSingleResponse resp = service.findById(id);
+		return new ResponseEntity<StudentSingleResponse>(resp, HttpStatus.OK);
 	}
 
 	@PostMapping
-	public void addStudent(@Valid @RequestBody StudentAdd student, BindingResult result) {
+	@PreAuthorize(value = "hasAuthority('ROLE_ADD_STUDENT')")
+	public ResponseEntity<StudentAddResponse> addStudent(@Valid @RequestBody StudentAddRequest student,
+			BindingResult result) {
 		if (result.hasErrors()) {
-			throw new MyException("melumatda problem var", result, "validation");
+			throw new MyException(Constans.STRING_VALIDATION_MESSAGE, result, Constans.STRING_VALIDATION_TYPE);
 		}
+		StudentAddResponse resp = new StudentAddResponse();
 		service.addStudent(student);
+		return new ResponseEntity<StudentAddResponse>(resp, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping(path = "/{id}")
-	public void deleteById(@PathVariable Integer id) {
+	public ResponseEntity<?> deleteById(@PathVariable Integer id) {
 		service.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PutMapping(path = "/{id}")
-	public void update(@PathVariable Integer id, @Valid @RequestBody StudentUpdate update, BindingResult result) {
+	public void update(@PathVariable Integer id, @Valid @RequestBody StudentUpdateRequest update, BindingResult result) {
 		if (result.hasErrors()) {
 			throw new MyException("melumatda problem var", result, "validation");
 		}

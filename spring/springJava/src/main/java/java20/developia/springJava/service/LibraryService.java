@@ -8,11 +8,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java20.developia.springJava.entity.LibraryEntity;
 import java20.developia.springJava.exception.MyException;
-import java20.developia.springJava.model.LibraryAdd;
-import java20.developia.springJava.model.LibraryEntity;
-import java20.developia.springJava.model.LibraryUpdate;
 import java20.developia.springJava.repository.LibraryRepository;
+import java20.developia.springJava.request.LibraryAddRequest;
+import java20.developia.springJava.request.LibraryUpdateRequest;
 import java20.developia.springJava.response.LibraryListResponse;
 import java20.developia.springJava.response.LibrarySingleResponse;
 
@@ -41,7 +41,7 @@ public class LibraryService {
 		return listResponse;
 	}
 
-	public void add(LibraryAdd libraryAdd) {
+	public void add(LibraryAddRequest libraryAdd) {
 		LibraryEntity entity = new LibraryEntity();
 		mapper.map(libraryAdd, entity);
 		repository.save(entity);
@@ -75,7 +75,7 @@ public class LibraryService {
 
 	}
 
-	public void updateById(Integer id, LibraryUpdate libUpdate) {
+	public void updateById(Integer id, LibraryUpdateRequest libUpdate) {
 		Optional<LibraryEntity> byId = repository.findById(id);
 		if (!byId.isPresent()) {
 			throw new MyException("id tapilmadi", null, "id-not-found");

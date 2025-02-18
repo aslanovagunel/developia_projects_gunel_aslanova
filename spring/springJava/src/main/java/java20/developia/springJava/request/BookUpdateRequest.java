@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class BookUpdate {
+public class BookUpdateRequest {
 
 	private Integer id;
 

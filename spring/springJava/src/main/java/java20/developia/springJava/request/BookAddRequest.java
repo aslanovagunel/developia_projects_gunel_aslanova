@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 
-public class BookAdd {
+public class BookAddRequest {
 	@Size(min = 3, message = "min 3 setir")
 	@Size(max = 40, message = "max 40 setir")
 	private String name;

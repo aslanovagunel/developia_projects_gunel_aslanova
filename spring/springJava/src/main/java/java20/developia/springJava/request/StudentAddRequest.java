@@ -1,4 +1,4 @@
-package java20.developia.springJava.model;
+package java20.developia.springJava.request;
 
 import java.time.LocalDate;
 
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class StudentAdd {
+public class StudentAddRequest {
 
 	@NotBlank
 	@Size(max = 10, message = "max 10 setir")
