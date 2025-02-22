@@ -38,4 +38,8 @@ public class StudentAddRequest {
 	private String email;
 
 	private String address;
+
+	private String username;
+
+	private String password;
 }

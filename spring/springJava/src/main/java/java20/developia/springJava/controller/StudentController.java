@@ -33,10 +33,40 @@ public class StudentController {
 	private StudentService service;
 
 	@GetMapping(path = "search")
-	@PreAuthorize(value = "hasAuthority('ROLE_GET_STUDENT')")
+	@PreAuthorize(value = "hasAuthority('ROLE_SEARCH_STUDENT')")
 	public ResponseEntity<StudentListResponse> find(@RequestParam(name = "query") String query) {
 		StudentListResponse resp = service.find(query);
 		return new ResponseEntity<StudentListResponse>(resp, HttpStatus.OK);
+	}
+
+	@PostMapping
+	@PreAuthorize(value = "hasAuthority('ROLE_ADD_STUDENT')")
+	public ResponseEntity<StudentAddResponse> add(@Valid @RequestBody StudentAddRequest req,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			throw new MyException(Constans.STRING_VALIDATION_MESSAGE, result, Constans.STRING_VALIDATION_TYPE);
+		}
+		service.add(req);
+		StudentAddResponse resp = new StudentAddResponse();
+
+		return new ResponseEntity<StudentAddResponse>(resp, HttpStatus.CREATED);
+	}
+
+	@PutMapping(path = "/{id}")
+	@PreAuthorize(value = "hasAuthority('ROLE_UPDATE_STUDENT')")
+	public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody StudentUpdateRequest update,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			throw new MyException(Constans.STRING_VALIDATION_MESSAGE, result, Constans.STRING_VALIDATION_TYPE);
+		}
+		service.update(id, update);
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping(path = "/{id}")
+	public ResponseEntity<?> deleteById(@PathVariable Integer id) {
+		service.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping(path = "/{id}")
@@ -46,30 +76,6 @@ public class StudentController {
 		return new ResponseEntity<StudentSingleResponse>(resp, HttpStatus.OK);
 	}
 
-	@PostMapping
-	@PreAuthorize(value = "hasAuthority('ROLE_ADD_STUDENT')")
-	public ResponseEntity<StudentAddResponse> addStudent(@Valid @RequestBody StudentAddRequest student,
-			BindingResult result) {
-		if (result.hasErrors()) {
-			throw new MyException(Constans.STRING_VALIDATION_MESSAGE, result, Constans.STRING_VALIDATION_TYPE);
-		}
-		StudentAddResponse resp = new StudentAddResponse();
-		service.addStudent(student);
-		return new ResponseEntity<StudentAddResponse>(resp, HttpStatus.CREATED);
-	}
 
-	@DeleteMapping(path = "/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable Integer id) {
-		service.deleteById(id);
-		return ResponseEntity.noContent().build();
-	}
-
-	@PutMapping(path = "/{id}")
-	public void update(@PathVariable Integer id, @Valid @RequestBody StudentUpdateRequest update, BindingResult result) {
-		if (result.hasErrors()) {
-			throw new MyException("melumatda problem var", result, "validation");
-		}
-		service.update(id, update);
-	}
 
 }

@@ -24,27 +24,26 @@ public class StudentService {
 	private StudentRepository repository;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AuthorityService authorityService;
+
+	@Autowired
 	private ModelMapper mapper;
 
-//	public StudentListResponse getAll() {
-//		List<StudentEntity> students = repository.findAll();
-//		List<StudentSingleResponse> singleResponces = new ArrayList<StudentSingleResponse>();
-//		StudentListResponse listResponce = new StudentListResponse();
-//
-//		for (StudentEntity s : students) {
-//			StudentSingleResponse sR = new StudentSingleResponse();
-//			mapper.map(s, sR);
-//			singleResponces.add(sR);
-//		}
-//
-//		listResponce.setStudents(singleResponces);
-//		return listResponce;
-//	}
 
-	public StudentAddResponse addStudent(StudentAddRequest student) {
+	public StudentAddResponse add(StudentAddRequest req) {
 		StudentEntity entity = new StudentEntity();
-		mapper.map(student, entity);
+		mapper.map(req, entity);
+		
 		repository.save(entity);
+		
+		userService.cheskStudentExists(req);
+		userService.addStudent(req, entity.getId());
+
+		authorityService.addStudentAuthorities(req);
+
 		StudentAddResponse resp = new StudentAddResponse();
 		resp.setId(entity.getId());
 		return resp;
@@ -59,8 +58,8 @@ public class StudentService {
 		repository.deleteById(id);
 	}
 
-	public StudentListResponse find(String phone) {
-		List<StudentEntity> entities = repository.findAllByPhoneContaining(phone);
+	public StudentListResponse find(String name) {
+		List<StudentEntity> entities = repository.findAllByNameContaining(name);
 		List<StudentSingleResponse> singleResponces = new ArrayList<StudentSingleResponse>();
 		StudentListResponse listResponce = new StudentListResponse();
 
@@ -97,5 +96,6 @@ public class StudentService {
 		repository.save(entity);
 
 	}
+
 
 }

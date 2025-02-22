@@ -65,6 +65,7 @@ public class BookService {
 	public BookAddResponse add(BookAddRequest req) {
 		BookEntity entity = new BookEntity();
 		mapper.map(req, entity);
+
 		repository.save(entity);
 		BookAddResponse resp = new BookAddResponse();
 		resp.setId(entity.getId());

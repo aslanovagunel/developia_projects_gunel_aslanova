@@ -8,5 +8,5 @@ import java20.developia.springJava.entity.StudentEntity;
 
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
 
-	List<StudentEntity> findAllByPhoneContaining(String phone);
+	List<StudentEntity> findAllByNameContaining(String name);
 }
