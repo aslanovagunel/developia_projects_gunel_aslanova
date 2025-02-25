@@ -32,7 +32,7 @@ public class StudentController {
 	@Autowired
 	private StudentService service;
 
-	@GetMapping(path = "search")
+	@GetMapping(path = "/search")
 	@PreAuthorize(value = "hasAuthority('ROLE_SEARCH_STUDENT')")
 	public ResponseEntity<StudentListResponse> find(@RequestParam(name = "query") String query) {
 		StudentListResponse resp = service.find(query);
