@@ -9,12 +9,13 @@ import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.response.MyErrorResponse;
 import spring.library_gunel_aslanova.response.MyFieldError;
 
-
+@RestControllerAdvice
 public class MyHandler {
 
 	@Autowired
