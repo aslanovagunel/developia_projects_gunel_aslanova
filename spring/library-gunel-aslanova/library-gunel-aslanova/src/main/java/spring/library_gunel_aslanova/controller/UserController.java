@@ -14,6 +14,7 @@ import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.request.LibrarianAddRequest;
 import spring.library_gunel_aslanova.response.LibrarianAddResponse;
 import spring.library_gunel_aslanova.service.UserService;
+import spring.library_gunel_aslanova.util.Message;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -26,7 +27,7 @@ public class UserController {
 	public ResponseEntity<LibrarianAddResponse> addLibrarian(@Valid @RequestBody LibrarianAddRequest req,
 			BindingResult result) {
 		if(result.hasErrors()) {
-			throw new MyException("melumat pozulub", result, "validatoin");
+			throw new MyException(Message.VALIDATION_MESSAGE, result, Message.VALIDATION_TYPE);
 		}
 		Integer id = service.addLibrarian(req);
 		LibrarianAddResponse resp = new LibrarianAddResponse();

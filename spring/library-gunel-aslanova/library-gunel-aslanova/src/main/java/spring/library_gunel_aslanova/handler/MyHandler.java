@@ -40,6 +40,7 @@ public class MyHandler {
 		}
 
 		resp.setMessage(e.getMessage());
+		resp.setType(e.getType());
 		return resp;
 	}
 

@@ -9,4 +9,6 @@ import lombok.Data;
 public class MyErrorResponse {
 	private List<MyFieldError> errors;
 	private String message;
+	private String type;
+
 }

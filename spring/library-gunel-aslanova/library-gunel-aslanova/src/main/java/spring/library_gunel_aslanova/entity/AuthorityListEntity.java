@@ -1,6 +1,8 @@
 package spring.library_gunel_aslanova.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -12,18 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "users")
-public class UserEntity {
+@Table(name = "authority_list")
+public class AuthorityListEntity {
 
 	@Id
-	private String username;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-	private String password;
+	private String authority;
 
-	private Integer userId;
-
-	private String type;
-
-	private Boolean enabled;
-
+	private Integer librarian;
 }

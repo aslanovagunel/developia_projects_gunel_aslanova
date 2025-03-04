@@ -40,7 +40,5 @@ public class BookEntity {
 
 	private Double weight;
 
-	private String email;
-
 	private LocalDate publishDate;
 }

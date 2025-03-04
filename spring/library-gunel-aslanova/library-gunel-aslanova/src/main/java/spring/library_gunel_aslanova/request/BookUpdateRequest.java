@@ -10,14 +10,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class BookAddRequest {
+public class BookUpdateRequest {
+
+	private Integer id;
 
 	@Size(min = 2, message = "Minimum 2 simvol olmalıdır!")
 	@Size(max = 50, message = "Maksimum 50 simvol olmalıdır!")
