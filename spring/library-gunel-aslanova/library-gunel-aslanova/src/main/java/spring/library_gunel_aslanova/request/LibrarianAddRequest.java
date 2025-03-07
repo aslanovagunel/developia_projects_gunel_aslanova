@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -32,7 +31,8 @@ public class LibrarianAddRequest {
 	private String password;
 
 	@NotBlank(message = "Telefon nömrəsi boş ola bilməz!")
-	@Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Telefon nömrəsi düzgün formatda olmalıdır!")
+	// @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Telefon nömrəsi düzgün
+	// formatda olmalıdır!")
 	private String phone;
 
 	@NotNull(message = "Doğum tarixi boş ola bilməz!")

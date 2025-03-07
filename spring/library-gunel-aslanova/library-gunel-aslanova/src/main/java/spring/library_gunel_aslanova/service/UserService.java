@@ -11,6 +11,7 @@ import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.UserRepository;
 import spring.library_gunel_aslanova.request.LibrarianAddRequest;
+import spring.library_gunel_aslanova.util.Message;
 
 @Service
 public class UserService {
@@ -41,7 +42,7 @@ public class UserService {
 		String encode = new BCryptPasswordEncoder().encode(en.getPassword());
 		en.setPassword("{bcrypt}" + encode);
 		en.setEnabled(true);
-		en.setType("librarian");
+		en.setUserType("librarian");
 		en.setUserId(id);
 		repository.save(en);
 
@@ -57,6 +58,14 @@ public class UserService {
 			throw new MyException("bu sexs movcuddur", null, "conflict");
 		}
 
+	}
+
+	public UserEntity findByUsername(String username) {
+		Optional<UserEntity> op = repository.findById(username);
+		if (!op.isPresent()) {
+			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
+		}
+		return op.get();
 	}
 
 }

@@ -22,7 +22,7 @@ public class UserEntity {
 
 	private Integer userId;
 
-	private String type;
+	private String userType;
 
 	private Boolean enabled;
 

@@ -44,4 +44,5 @@ public class BookAddRequest {
 
 	@Past(message = "Keçmiş tarix olmalıdır!")
 	private LocalDate publishDate;
+
 }

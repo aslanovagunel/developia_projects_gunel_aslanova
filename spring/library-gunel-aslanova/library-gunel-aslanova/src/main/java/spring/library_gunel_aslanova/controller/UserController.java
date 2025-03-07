@@ -23,7 +23,7 @@ public class UserController {
 	@Autowired
 	private UserService service;
 
-	@PostMapping(path = "/librarians")
+	@PostMapping(path = "/librarian")
 	public ResponseEntity<LibrarianAddResponse> addLibrarian(@Valid @RequestBody LibrarianAddRequest req,
 			BindingResult result) {
 		if(result.hasErrors()) {

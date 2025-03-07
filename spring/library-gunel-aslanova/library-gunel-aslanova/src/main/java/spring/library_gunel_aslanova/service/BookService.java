@@ -6,9 +6,11 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import spring.library_gunel_aslanova.entity.BookEntity;
+import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.BookRepository;
 import spring.library_gunel_aslanova.request.BookAddRequest;
@@ -24,14 +26,23 @@ public class BookService {
 	private BookRepository repository;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private ModelMapper mapper;
 
 	public Integer add(BookAddRequest req) {
 		BookEntity en = new BookEntity();
 		mapper.map(req, en);
+
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		UserEntity entity = userService.findByUsername(username);
+		en.setLibrarianCode(entity.getUserId());
 		repository.save(en);
 		return en.getId();
 	}
+
 
 	public Integer update(BookUpdateRequest req) {
 		Optional<BookEntity> op = repository.findById(req.getId());

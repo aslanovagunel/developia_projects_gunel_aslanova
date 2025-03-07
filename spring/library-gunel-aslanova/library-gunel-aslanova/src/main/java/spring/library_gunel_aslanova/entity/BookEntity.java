@@ -41,4 +41,6 @@ public class BookEntity {
 	private Double weight;
 
 	private LocalDate publishDate;
+
+	private Integer LibrarianCode;
 }
