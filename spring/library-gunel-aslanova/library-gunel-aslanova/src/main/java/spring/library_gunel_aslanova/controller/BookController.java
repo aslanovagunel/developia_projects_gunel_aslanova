@@ -1,3 +1,4 @@
+
 package spring.library_gunel_aslanova.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -5,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,6 +60,13 @@ public class BookController {
 	public ResponseEntity<BookListResponse> search(@RequestParam(value = "query") String query) {
 		BookListResponse resp = service.search(query);
 		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(path = "/{id}")
+	@PreAuthorize(value = "hasAuthority('ROLE_DELETE_BOOK')")
+	public ResponseEntity<?> deleteById(@PathVariable Integer id) {
+		service.deleteById(id);
+		return  ResponseEntity.noContent().build();
 	}
 
 

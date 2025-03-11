@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +67,11 @@ public class UserService {
 			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
 		}
 		return op.get();
+	}
+
+	public String findUsername() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		return username;
 	}
 
 }

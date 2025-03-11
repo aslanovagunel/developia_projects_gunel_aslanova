@@ -42,5 +42,5 @@ public class BookEntity {
 
 	private LocalDate publishDate;
 
-	private Integer LibrarianCode;
+	private Integer librarianCode;
 }

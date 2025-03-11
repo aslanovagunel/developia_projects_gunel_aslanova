@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import spring.library_gunel_aslanova.entity.BookEntity;
@@ -35,7 +34,7 @@ public class BookService {
 		BookEntity en = new BookEntity();
 		mapper.map(req, en);
 
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		String username = userService.findUsername();
 
 		UserEntity entity = userService.findByUsername(username);
 		en.setLibrarianCode(entity.getUserId());
@@ -72,6 +71,20 @@ public class BookService {
 		}
 		resp.setBooks(responses);
 		return resp;
+	}
+
+	public void deleteById(Integer id) {
+		Optional<BookEntity> op = repository.findById(id);
+		if (!op.isPresent()) {
+			throw new MyException(Message.BOOK_NOT_FOUND_BY_NAME, null, Message.ID_NOT_FOUND);
+		}
+		String username = userService.findUsername();
+		UserEntity en = userService.findByUsername(username);
+		if (!op.get().getLibrarianCode().equals(en.getUserId())) {
+			throw new MyException(Message.OTHER_USER_BOOK_DELETE_NOT_ALLOWED, null, Message.FORBIDDEN);
+		}
+		repository.deleteById(id);
+
 	}
 
 }
