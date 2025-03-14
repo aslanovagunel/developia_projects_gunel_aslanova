@@ -57,8 +57,10 @@ public class BookController {
 	}
 
 	@GetMapping(path = "/search")
-	public ResponseEntity<BookListResponse> search(@RequestParam(value = "query") String query) {
-		BookListResponse resp = service.search(query);
+	@PreAuthorize(value = "hasAuthority('ROLE_SEARCH_BOOK')")
+	public ResponseEntity<BookListResponse> search(@RequestParam(value = "query") String query,
+			@RequestParam(value = "minPrice") Integer minPrice, @RequestParam(value = "maxPrice") Integer maxPrice) {
+		BookListResponse resp = service.search(query, minPrice, maxPrice);
 		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
 	}
 	

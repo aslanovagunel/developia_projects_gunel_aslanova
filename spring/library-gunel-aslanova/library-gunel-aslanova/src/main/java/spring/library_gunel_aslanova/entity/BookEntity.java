@@ -1,6 +1,5 @@
 package spring.library_gunel_aslanova.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
@@ -28,7 +27,7 @@ public class BookEntity {
 
 	private String description;
 
-	private BigDecimal price;
+	private Integer price;
 
 	private String author;
 

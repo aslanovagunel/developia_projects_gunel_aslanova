@@ -45,19 +45,28 @@ public class BookService {
 
 	public Integer update(BookUpdateRequest req) {
 		Optional<BookEntity> op = repository.findById(req.getId());
-		BookEntity en = null;
 		if (!op.isPresent()) {
 			throw new MyException(Message.BOOK_NOT_FOUND_BY_ID, null, Message.ID_NOT_FOUND);
 		}
-		en = op.get();
+		BookEntity en = op.get();
 		mapper.map(req, en);
+
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+		if (!en.getLibrarianCode().equals(entity.getUserId())) {
+			throw new MyException(Message.OTHER_USER_BOOK_UPDATE_NOT_ALLOWED, null, Message.FORBIDDEN);
+		}
 		repository.save(en);
 
 		return en.getId();
 	}
 
-	public BookListResponse search(String query) {
-		List<BookEntity> en = repository.findAllByNameContaining(query);
+	public BookListResponse search(String query, Integer minPrice, Integer maxPrice) {
+		query = query.toLowerCase();
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+
+		List<BookEntity> en = repository.findMyBookSearch(query, entity.getUserId(), minPrice, maxPrice);
 
 		if (en.isEmpty()) {
 			throw new MyException(Message.BOOK_NOT_FOUND_BY_NAME, null, Message.ID_NOT_FOUND);
@@ -65,10 +74,15 @@ public class BookService {
 		BookListResponse resp = new BookListResponse();
 		List<BookSingleResponse> responses = new ArrayList<BookSingleResponse>();
 		for (BookEntity b : en) {
+
+			if (!b.getLibrarianCode().equals(entity.getUserId())) {
+				throw new MyException(Message.OTHER_USER_BOOK_UPDATE_NOT_ALLOWED, null, Message.FORBIDDEN);
+			}
 			BookSingleResponse r = new BookSingleResponse();
 			mapper.map(b, r);
 			responses.add(r);
 		}
+
 		resp.setBooks(responses);
 		return resp;
 	}

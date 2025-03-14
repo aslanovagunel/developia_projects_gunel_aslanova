@@ -14,6 +14,7 @@ public class Message {
 	public static final String NAME_NOT_FOUND = "name-not-found";
 	public static final String OTHER_USER_BOOK_DELETE_NOT_ALLOWED = "diger sexsin kitabi siline bilmez";
 	public static final String FORBIDDEN = "qadagandir";
+	public static final String OTHER_USER_BOOK_UPDATE_NOT_ALLOWED = "diger sexsin kitabi deyisile bilmez";
 
 
 }
