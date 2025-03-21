@@ -8,17 +8,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import spring.library_gunel_aslanova.entity.BookEntity;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.BookRepository;
 import spring.library_gunel_aslanova.request.BookAddRequest;
+import spring.library_gunel_aslanova.request.BookFilterRequest;
 import spring.library_gunel_aslanova.request.BookUpdateRequest;
 import spring.library_gunel_aslanova.response.BookListResponse;
 import spring.library_gunel_aslanova.response.BookSingleResponse;
 import spring.library_gunel_aslanova.util.Message;
 
 @Service
+@Transactional
 public class BookService {
 
 	@Autowired
@@ -74,7 +77,6 @@ public class BookService {
 		BookListResponse resp = new BookListResponse();
 		List<BookSingleResponse> responses = new ArrayList<BookSingleResponse>();
 		for (BookEntity b : en) {
-
 			if (!b.getLibrarianCode().equals(entity.getUserId())) {
 				throw new MyException(Message.OTHER_USER_BOOK_UPDATE_NOT_ALLOWED, null, Message.FORBIDDEN);
 			}
@@ -99,6 +101,31 @@ public class BookService {
 		}
 		repository.deleteById(id);
 
+	}
+
+	public BookListResponse myBookSearch(BookFilterRequest r) {
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+
+		Long count = repository.myBookSearchCheck(entity.getUserId(), r.getId(), r.getName(), r.getStartPrice(),r.getEndPrice(),
+				r.getDescription(), r.getStartDate(), r.getEndDate());
+		
+		if(count>2) {
+			throw new MyException("daha cox melumat elave edin", null, "data-too-long");
+		}
+		List<BookEntity> en = repository.myBookSearch(entity.getUserId(), r.getId(), r.getName(), r.getStartPrice(),r.getEndPrice(),
+				r.getDescription(), r.getStartDate(), r.getEndDate());
+
+		BookListResponse resp = new BookListResponse();
+		List<BookSingleResponse> responses = new ArrayList<BookSingleResponse>();
+		for (BookEntity b : en) {
+			BookSingleResponse re = new BookSingleResponse();
+			mapper.map(b, re);
+			responses.add(re);
+		}
+
+		resp.setBooks(responses);
+		return resp;
 	}
 
 }

@@ -7,18 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.request.BookAddRequest;
+import spring.library_gunel_aslanova.request.BookFilterRequest;
 import spring.library_gunel_aslanova.request.BookUpdateRequest;
 import spring.library_gunel_aslanova.response.BookAddResponse;
 import spring.library_gunel_aslanova.response.BookListResponse;
@@ -56,11 +55,10 @@ public class BookController {
 		return new ResponseEntity<BookAddResponse>(resp, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/search")
+	@PostMapping(path = "/search")
 	@PreAuthorize(value = "hasAuthority('ROLE_SEARCH_BOOK')")
-	public ResponseEntity<BookListResponse> search(@RequestParam(value = "query") String query,
-			@RequestParam(value = "minPrice") Integer minPrice, @RequestParam(value = "maxPrice") Integer maxPrice) {
-		BookListResponse resp = service.search(query, minPrice, maxPrice);
+	public ResponseEntity<BookListResponse> myBookSearch(@RequestBody BookFilterRequest req) {
+		BookListResponse resp = service.myBookSearch(req);
 		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
 	}
 	

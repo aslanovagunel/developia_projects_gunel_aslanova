@@ -4,11 +4,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import spring.library_gunel_aslanova.entity.LibrarianEntity;
 import spring.library_gunel_aslanova.repository.LibrarianRepository;
 import spring.library_gunel_aslanova.request.LibrarianAddRequest;
 
 @Service
+@Transactional
 public class LibrarianService {
 
 	@Autowired

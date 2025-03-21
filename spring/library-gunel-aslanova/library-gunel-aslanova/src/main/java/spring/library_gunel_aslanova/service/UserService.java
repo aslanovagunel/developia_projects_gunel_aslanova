@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.UserRepository;
@@ -15,6 +16,7 @@ import spring.library_gunel_aslanova.request.LibrarianAddRequest;
 import spring.library_gunel_aslanova.util.Message;
 
 @Service
+@Transactional
 public class UserService {
 
 	@Autowired
