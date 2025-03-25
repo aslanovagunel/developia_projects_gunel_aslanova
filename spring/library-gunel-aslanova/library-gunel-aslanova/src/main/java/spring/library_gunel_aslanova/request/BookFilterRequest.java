@@ -1,5 +1,7 @@
 package spring.library_gunel_aslanova.request;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,12 +17,12 @@ public class BookFilterRequest {
 
 	private String description;
 
-	private String startPrice;
+	private Integer startPrice;
 
-	private String endPrice;
+	private Integer endPrice;
 
-	private String startDate;
+	private LocalDate startDate;
 
-	private String endDate;
+	private LocalDate endDate;
 
 }

@@ -1,5 +1,7 @@
 package spring.library_gunel_aslanova.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,16 +16,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "authority_list")
-public class AuthorityListEntity {
+@Table(name = "students")
+public class StudentEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private String authority;
+	private String name;
 
-	private Integer librarian;
+	private String surname;
 
-	private Integer student;
+	private String phone;
+
+	private LocalDate birthday;
 }

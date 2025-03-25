@@ -6,5 +6,8 @@ import lombok.Data;
 
 @Data
 public class BookListResponse {
-	List<BookSingleResponse> books;
+
+	private List<BookSingleResponse> books;
+
+	private Integer totalSize;
 }

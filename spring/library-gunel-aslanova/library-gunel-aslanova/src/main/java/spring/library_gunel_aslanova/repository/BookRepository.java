@@ -1,5 +1,6 @@
 package spring.library_gunel_aslanova.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,11 +14,18 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 	List<BookEntity> findMyBookSearch(String query, Integer userId, Integer minPrice, Integer maxPrice);
 
 	@Query(value = "select * from books where librarian_code=?1 and id like %?2% and lower(name) like %?3% and  (price between ?4 and ?5) and lower(description) like %?6%  and (publish_date between ?7 and ?8)", nativeQuery = true)
-	List<BookEntity> myBookSearch(Integer userId, String id, String name, String startPrice, String endPrice,
-			String description, String startDate, String endDate);
+	List<BookEntity> myBookSearch(Integer userId, String id, String name, Integer startPrice, Integer endPrice,
+			String description, LocalDate startDate, LocalDate endDate);
 
 	@Query(value = "select count(*) from books where librarian_code=?1 and id like %?2%  and lower(name) like %?3% and  (price between ?4 and ?5) and lower(description) like %?6% and (publish_date between ?7 and ?8) ", nativeQuery = true)
-	Long myBookSearchCheck(Integer userId, String id, String name, String startPrice, String endPrice,
-			String description, String startDate, String endDate);
+	Long myBookSearchCheck(Integer userId, String id, String name, Integer startPrice, Integer endPrice,
+			String description, LocalDate startDate, LocalDate endDate);
+
+	@Query(value = "select count(*) from books where category_id like %?1%  and lower(name) like %?2% ", nativeQuery = true)
+	Integer myBookSearchCountForStudent(Integer categoryId, String name);
+
+	@Query(value = "select * from books where category_id like %?1%  and lower(name) like %?2% limit ?3,?4 ", nativeQuery = true)
+	List<BookEntity> myBookSearchForStudent(Integer categoryId, String name, Integer begin,
+			Integer length);
 
 }

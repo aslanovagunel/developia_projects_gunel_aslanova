@@ -42,4 +42,8 @@ public class BookEntity {
 	private LocalDate publishDate;
 
 	private Integer librarianCode;
+
+	private Integer studentCode;
+
+	private Integer categoryId;
 }

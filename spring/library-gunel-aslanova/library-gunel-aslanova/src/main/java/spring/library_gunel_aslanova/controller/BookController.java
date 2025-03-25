@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.request.BookAddRequest;
 import spring.library_gunel_aslanova.request.BookFilterRequest;
+import spring.library_gunel_aslanova.request.BookFilterRequestForStudent;
 import spring.library_gunel_aslanova.request.BookUpdateRequest;
 import spring.library_gunel_aslanova.response.BookAddResponse;
 import spring.library_gunel_aslanova.response.BookListResponse;
@@ -62,6 +63,13 @@ public class BookController {
 		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
 	}
 	
+	@PostMapping(path = "/search-for-student")
+	@PreAuthorize(value = "hasAuthority('ROLE_SEARCH_FOR_STUDENT_BOOK')")
+	public ResponseEntity<BookListResponse> myBookSearchForStudent(@RequestBody BookFilterRequestForStudent req) {
+		BookListResponse resp = service.myBookSearchForStudent(req);
+		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
+	}
+
 	@DeleteMapping(path = "/{id}")
 	@PreAuthorize(value = "hasAuthority('ROLE_DELETE_BOOK')")
 	public ResponseEntity<?> deleteById(@PathVariable Integer id) {

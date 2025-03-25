@@ -15,6 +15,7 @@ import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.BookRepository;
 import spring.library_gunel_aslanova.request.BookAddRequest;
 import spring.library_gunel_aslanova.request.BookFilterRequest;
+import spring.library_gunel_aslanova.request.BookFilterRequestForStudent;
 import spring.library_gunel_aslanova.request.BookUpdateRequest;
 import spring.library_gunel_aslanova.response.BookListResponse;
 import spring.library_gunel_aslanova.response.BookSingleResponse;
@@ -107,14 +108,14 @@ public class BookService {
 		String username = userService.findUsername();
 		UserEntity entity = userService.findByUsername(username);
 
-		Long count = repository.myBookSearchCheck(entity.getUserId(), r.getId(), r.getName(), r.getStartPrice(),r.getEndPrice(),
-				r.getDescription(), r.getStartDate(), r.getEndDate());
+		Long count = repository.myBookSearchCheck(entity.getUserId(), r.getId(), r.getName(), r.getStartPrice(),
+				r.getEndPrice(), r.getDescription(), r.getStartDate(), r.getEndDate());
 		
-		if(count>2) {
+		if (count > 2) {
 			throw new MyException("daha cox melumat elave edin", null, "data-too-long");
 		}
-		List<BookEntity> en = repository.myBookSearch(entity.getUserId(), r.getId(), r.getName(), r.getStartPrice(),r.getEndPrice(),
-				r.getDescription(), r.getStartDate(), r.getEndDate());
+		List<BookEntity> en = repository.myBookSearch(entity.getUserId(), r.getId(), r.getName(), r.getStartPrice(),
+				r.getEndPrice(), r.getDescription(), r.getStartDate(), r.getEndDate());
 
 		BookListResponse resp = new BookListResponse();
 		List<BookSingleResponse> responses = new ArrayList<BookSingleResponse>();
@@ -125,6 +126,32 @@ public class BookService {
 		}
 
 		resp.setBooks(responses);
+
+		return resp;
+	}
+
+	public BookListResponse myBookSearchForStudent(BookFilterRequestForStudent req) {
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+
+		String q = req.getName().toLowerCase();
+
+		Integer totalSize = repository.myBookSearchCountForStudent(req.getCategoryId(),
+				q);
+
+		List<BookEntity> en = repository.myBookSearchForStudent(req.getCategoryId(), q,
+				req.getBegin(), req.getLength());
+
+		BookListResponse resp = new BookListResponse();
+		List<BookSingleResponse> responses = new ArrayList<BookSingleResponse>();
+		for (BookEntity b : en) {
+			BookSingleResponse re = new BookSingleResponse();
+			mapper.map(b, re);
+			responses.add(re);
+		}
+
+		resp.setBooks(responses);
+		resp.setTotalSize(totalSize);
 		return resp;
 	}
 
