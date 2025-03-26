@@ -58,7 +58,11 @@ public class BookController {
 
 	@PostMapping(path = "/search")
 	@PreAuthorize(value = "hasAuthority('ROLE_SEARCH_BOOK')")
-	public ResponseEntity<BookListResponse> myBookSearch(@RequestBody BookFilterRequest req) {
+	public ResponseEntity<BookListResponse> myBookSearch(@Valid @RequestBody BookFilterRequest req,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			throw new MyException(Message.VALIDATION_MESSAGE, result, Message.VALIDATION_TYPE);
+		}
 		BookListResponse resp = service.myBookSearch(req);
 		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
 	}

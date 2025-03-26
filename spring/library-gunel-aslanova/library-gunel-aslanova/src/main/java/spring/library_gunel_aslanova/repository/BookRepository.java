@@ -22,10 +22,10 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 			String description, LocalDate startDate, LocalDate endDate);
 
 	@Query(value = "select count(*) from books where category_id like %?1%  and lower(name) like %?2% ", nativeQuery = true)
-	Integer myBookSearchCountForStudent(Integer categoryId, String name);
+	Integer myBookSearchCountForStudent(String category, String name);
 
 	@Query(value = "select * from books where category_id like %?1%  and lower(name) like %?2% limit ?3,?4 ", nativeQuery = true)
-	List<BookEntity> myBookSearchForStudent(Integer categoryId, String name, Integer begin,
+	List<BookEntity> myBookSearchForStudent(String category, String name, Integer begin,
 			Integer length);
 
 }

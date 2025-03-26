@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import spring.library_gunel_aslanova.config.MyConfig;
 import spring.library_gunel_aslanova.entity.BookEntity;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
@@ -33,6 +34,9 @@ public class BookService {
 
 	@Autowired
 	private ModelMapper mapper;
+
+	@Autowired
+	private MyConfig myConfig;
 
 	public Integer add(BookAddRequest req) {
 		BookEntity en = new BookEntity();
@@ -131,15 +135,22 @@ public class BookService {
 	}
 
 	public BookListResponse myBookSearchForStudent(BookFilterRequestForStudent req) {
-		String username = userService.findUsername();
-		UserEntity entity = userService.findByUsername(username);
 
 		String q = req.getName().toLowerCase();
+		
+		Integer categoryId = req.getCategoryId();
+		String category="";
+		if (categoryId != 0) {
+			category = String.valueOf(categoryId);
+		}
 
-		Integer totalSize = repository.myBookSearchCountForStudent(req.getCategoryId(),
-				q);
+		Integer totalSize = repository.myBookSearchCountForStudent(category, q);
 
-		List<BookEntity> en = repository.myBookSearchForStudent(req.getCategoryId(), q,
+		if (req.getLength() > myConfig.getRowCountLimit()) {
+			throw new MyException("melumat coxdur", null, "data-too-long");
+		}
+
+		List<BookEntity> en = repository.myBookSearchForStudent(category, q,
 				req.getBegin(), req.getLength());
 
 		BookListResponse resp = new BookListResponse();
