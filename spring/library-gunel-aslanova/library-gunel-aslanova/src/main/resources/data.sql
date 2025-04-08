@@ -41,11 +41,11 @@ insert into librarians
 ('gunel','aslanova','12345','2012-09-07','asla@gmail.com');
 
 insert into students
-(name,surname,phone,birthday,email) values
-('gunel1','aslanova1','12345','2012-09-07','asla@gmail.com'),
-('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com'),
-('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com'),
-('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com');
+(name,surname,phone,birthday,email,librarian_code) values
+('gunel1','aslanova1','12345','2012-09-07','asla@gmail.com',1),
+('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com',1),
+('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com',1),
+('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com',1);
 
 insert into books
 (name,description,price,author,color,page_count,quantity,weight,publish_date,librarian_code,student_code,category_id) values

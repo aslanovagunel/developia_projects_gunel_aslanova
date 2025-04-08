@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import spring.library_gunel_aslanova.config.MyConfig;
 import spring.library_gunel_aslanova.entity.StudentEntity;
+import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.StudentRepository;
 import spring.library_gunel_aslanova.request.StudentAddRequest;
@@ -45,8 +46,12 @@ public class StudentService {
 		userService.checkUsernameExists(req.getUsername());
 
 		// add student
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+
 		StudentEntity en = new StudentEntity();
 		mapper.map(req, en);
+		en.setLibrarianCode(entity.getUserId());
 		repository.save(en);
 		Integer studentId = en.getId();
 
@@ -64,8 +69,12 @@ public class StudentService {
 			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
 		}
 
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+		if (!entity.getUserId().equals(op.get().getLibrarianCode())) {
+			throw new MyException("basqa kitabxanacinin telebesini sile bilmersen", null, "accsess-denied");
+		}
 		repository.deleteById(id);
-
 	}
 
 	public Integer update(StudentUpdateRequest req) {
@@ -74,12 +83,21 @@ public class StudentService {
 			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
 		}
 		StudentEntity en = op.get();
+
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+		if (!entity.getUserId().equals(op.get().getLibrarianCode())) {
+			throw new MyException("basqa kitabxanacinin telebesini redakte ede bilmersen", null, "accsess-denied");
+		}
+
 		mapper.map(req, en);
 		repository.save(en);
 		return en.getId();
+
 	}
 
 	public StudentListResponse search(StudentFilterRequest req) {
+
 		Long searchResultCount = repository.searchResultCount(req.getId(), req.getName(), req.getSurname(),
 				req.getPhone(), req.getEmail(), req.getBirthday(), req.getBegin(), req.getLength());
 
@@ -94,8 +112,14 @@ public class StudentService {
 
 		StudentListResponse resp = new StudentListResponse();
 
+		String username = userService.findUsername();
+		UserEntity entity = userService.findByUsername(username);
+
 		List<StudentSingleResponse> responses = new ArrayList<StudentSingleResponse>();
 		for (StudentEntity en : entities) {
+			if (!entity.getUserId().equals(en.getLibrarianCode())) {
+				throw new MyException("basqa kitabxanacinin telebesini axtara bilmersen", null, "accsess-denied");
+			}
 			StudentSingleResponse r = new StudentSingleResponse();
 			mapper.map(en, r);
 			responses.add(r);
