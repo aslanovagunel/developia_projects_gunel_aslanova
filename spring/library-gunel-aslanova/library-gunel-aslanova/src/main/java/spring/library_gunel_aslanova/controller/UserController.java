@@ -3,7 +3,6 @@ package spring.library_gunel_aslanova.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.request.LibrarianAddRequest;
-import spring.library_gunel_aslanova.request.StudentAddRequest;
 import spring.library_gunel_aslanova.response.LibrarianAddResponse;
-import spring.library_gunel_aslanova.response.StudentAddResponse;
 import spring.library_gunel_aslanova.service.UserService;
 import spring.library_gunel_aslanova.util.Message;
 
@@ -38,17 +35,5 @@ public class UserController {
 		return new ResponseEntity<LibrarianAddResponse>(resp, HttpStatus.CREATED);
 	}
 
-	@PostMapping(path = "/student")
-	@PreAuthorize(value = "hasAuthority('ROLE_ADD_STUDENT')")
-	public ResponseEntity<StudentAddResponse> addStudent(@Valid @RequestBody StudentAddRequest req,
-			BindingResult result) {
-		if (result.hasErrors()) {
-			throw new MyException(Message.VALIDATION_MESSAGE, result, Message.VALIDATION_TYPE);
-		}
-		Integer id = service.addStudent(req);
-		StudentAddResponse resp = new StudentAddResponse();
-		resp.setId(id);
-		return new ResponseEntity<StudentAddResponse>(resp, HttpStatus.CREATED);
-	}
 
 }

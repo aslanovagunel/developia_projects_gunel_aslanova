@@ -29,5 +29,7 @@ public class LibrarianEntity {
 
 	private String phone;
 
+	private String email;
+
 	private LocalDate birthday;
 }

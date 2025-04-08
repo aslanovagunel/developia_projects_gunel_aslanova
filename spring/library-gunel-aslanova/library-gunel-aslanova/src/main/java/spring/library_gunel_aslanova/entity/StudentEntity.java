@@ -29,5 +29,7 @@ public class StudentEntity {
 
 	private String phone;
 
+	private String email;
+
 	private LocalDate birthday;
 }

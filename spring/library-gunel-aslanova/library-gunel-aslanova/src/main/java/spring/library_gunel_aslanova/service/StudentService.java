@@ -1,13 +1,24 @@
 package spring.library_gunel_aslanova.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import spring.library_gunel_aslanova.config.MyConfig;
 import spring.library_gunel_aslanova.entity.StudentEntity;
+import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.StudentRepository;
 import spring.library_gunel_aslanova.request.StudentAddRequest;
+import spring.library_gunel_aslanova.request.StudentFilterRequest;
+import spring.library_gunel_aslanova.request.StudentUpdateRequest;
+import spring.library_gunel_aslanova.response.StudentListResponse;
+import spring.library_gunel_aslanova.response.StudentSingleResponse;
+import spring.library_gunel_aslanova.util.Message;
 
 @Service
 @Transactional
@@ -17,13 +28,81 @@ public class StudentService {
 	private StudentRepository repository;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AuthorityService authorityService;
+
+	@Autowired
 	private ModelMapper mapper;
 
+	@Autowired
+	private MyConfig myConfig;
+
 	public Integer add(StudentAddRequest req) {
+
+		// check student exists
+		userService.checkUsernameExists(req.getUsername());
+
+		// add student
 		StudentEntity en = new StudentEntity();
 		mapper.map(req, en);
 		repository.save(en);
+		Integer studentId = en.getId();
+
+		// add user
+		userService.addStudent(req, studentId);
+
+		// add authority
+		authorityService.addStudentAuthorities(req.getUsername());
+		return studentId;
+	}
+
+	public void deleteById(Integer id) {
+		Optional<StudentEntity> op = repository.findById(id);
+		if (!op.isPresent()) {
+			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
+		}
+
+		repository.deleteById(id);
+
+	}
+
+	public Integer update(StudentUpdateRequest req) {
+		Optional<StudentEntity> op = repository.findById(req.getId());
+		if (!op.isPresent()) {
+			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
+		}
+		StudentEntity en = op.get();
+		mapper.map(req, en);
+		repository.save(en);
 		return en.getId();
+	}
+
+	public StudentListResponse search(StudentFilterRequest req) {
+		Long searchResultCount = repository.searchResultCount(req.getId(), req.getName(), req.getSurname(),
+				req.getPhone(), req.getEmail(), req.getBirthday(), req.getBegin(), req.getLength());
+
+		if (searchResultCount > myConfig.getRowCountLimit()) {
+			throw new MyException(
+					"netice coxdur max " + myConfig.getRowCountLimit() + " qeder melumat gele biler,saheleri doldurun",
+					null, "data-too-long");
+		}
+
+		List<StudentEntity> entities = repository.search(req.getId(), req.getName(), req.getSurname(), req.getPhone(),
+				req.getEmail(), req.getBirthday(), req.getBegin(), req.getLength());
+
+		StudentListResponse resp = new StudentListResponse();
+
+		List<StudentSingleResponse> responses = new ArrayList<StudentSingleResponse>();
+		for (StudentEntity en : entities) {
+			StudentSingleResponse r = new StudentSingleResponse();
+			mapper.map(en, r);
+			responses.add(r);
+		}
+		resp.setBooks(responses);
+		resp.setTotalSize(searchResultCount);
+		return resp;
 	}
 
 }

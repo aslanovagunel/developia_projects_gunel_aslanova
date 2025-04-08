@@ -9,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.UserRepository;
@@ -33,8 +32,6 @@ public class UserService {
 	@Autowired
 	private ModelMapper mapper;
 
-	@Autowired
-	private StudentService studentService;
 
 	public Integer addLibrarian(LibrarianAddRequest req) {
 
@@ -81,14 +78,7 @@ public class UserService {
 		return username;
 	}
 
-	public Integer addStudent(@Valid StudentAddRequest req) {
-		// check student exists
-		checkUsernameExists(req.getUsername());
-
-		// add student
-		Integer studentId = studentService.add(req);
-
-		// add user
+	public void addStudent(StudentAddRequest req, Integer studentId) {
 		UserEntity en = new UserEntity();
 		mapper.map(req, en);
 		String encode = new BCryptPasswordEncoder().encode(en.getPassword());
@@ -97,11 +87,8 @@ public class UserService {
 		en.setUserId(studentId);
 		en.setEnabled(true);
 		repository.save(en);
-
-
-		// add authority
-		authorityService.addStudentAuthorities(req.getUsername());
-		return studentId;
+		
 	}
 
 }
+
