@@ -56,6 +56,13 @@ insert into books
 ('Css3','James yazdi 21','45','Emin, Yusif','red',233,150,3,'2020-10-10',1,0,1),
 ('Html 5','James yazdi 21','60','Emin, Yusif','red',676,150,3,'2020-10-10',2,0,1);
 
+insert into translates
+(id,language,word,translate) values
+('1','tr','edit','Düzenlendi'),
+('2','tr','file','Fayl'),
+
+('3','en','edit','Edit'),
+('4','en','file','File');
 
 
 
