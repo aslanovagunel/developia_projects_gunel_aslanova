@@ -5,13 +5,12 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseExportScheduler {
 
-	@Scheduled(cron = "0 */1 * * * *")
+	// @Scheduled(cron = "0 */1 * * * *")
 	public void exportDatabase() {
 		String user = "root";
 		String password = "1234";

@@ -46,6 +46,7 @@ public class BookService {
 
 		UserEntity entity = userService.findByUsername(username);
 		en.setLibrarianCode(entity.getUserId());
+
 		repository.save(en);
 		return en.getId();
 	}
