@@ -9,7 +9,12 @@ insert into authority_list
 ('ROLE_SEARCH_FOR_STUDENT_BOOK',0,1),
 ('ROLE_DELETE_STUDENT',1,0),
 ('ROLE_UPDATE_STUDENT',1,0),
-('ROLE_FIND_STUDENT',1,0);
+('ROLE_FIND_STUDENT',1,0),
+('ROLE_LEND_BOOK',1,0),
+('ROLE_SHOW_LEND_BOOK',1,0),
+('ROLE_RETURN_BOOK',1,0),
+('ROLE_SHOW_RETURN_BOOK',1,0),
+('ROLE_LATE_RETURN_BOOK',1,0);
 
 
 insert into users
@@ -72,3 +77,22 @@ create view librarians_book_count
 as
 (select l.id,l.name,count(b.name) as count from librarians l inner join books b
 on l.id=b.librarian_code group by l.name);
+
+drop table show_lend_books;
+
+create view show_lend_books as
+select l.id,s.id as student_code, s.name as student_name, 
+       b.id as book_code, b.name as book_name, 
+       l.librarian_code,l.count,l.reg_date,l.return_date,l.must_return_date,
+from LEND_BOOKS l 
+join students s on l.student_code = s.id 
+join books b on l.book_code = b.id;
+
+
+insert into students
+(name,surname,phone,birthday,email,librarian_code) values
+('gunel1','aslanova1','12345','2012-09-07','asla@gmail.com',1),
+
+
+
+

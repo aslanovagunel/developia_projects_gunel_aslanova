@@ -129,4 +129,14 @@ public class StudentService {
 		return resp;
 	}
 
+	public StudentEntity findById(Integer studentCode) {
+		Optional<StudentEntity> op = repository.findById(studentCode);
+		if (!op.isPresent()) {
+			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
+		}
+		StudentEntity en = op.get();
+		return en;
+
+	}
+
 }

@@ -28,4 +28,10 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 	List<BookEntity> myBookSearchForStudent(String category, String name, Integer begin,
 			Integer length);
 
+	@Query(value = "select * from books where id=?1 ", nativeQuery = true)
+	List<BookEntity> lendBook(Integer bookCode);
+
+
+
+
 }
