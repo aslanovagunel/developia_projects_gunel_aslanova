@@ -30,10 +30,6 @@ public class LendBookService {
 		return en.getId();
 	}
 
-	public List<LendBookEntity> showLendBook(Integer userId) {
-		List<LendBookEntity> list = repository.showLendBook(userId);
-		return list;
-	}
 
 	public List<LendBookEntity> changeReturnDate(ReturnBookRequest req) {
 		List<LendBookEntity> list = repository.changeReturnDate(req.getStudentCode(), req.getBookCode());
@@ -45,14 +41,5 @@ public class LendBookService {
 		return list;
 	}
 
-	public List<LendBookEntity> showReturnBook(Integer userId) {
-		List<LendBookEntity> list = repository.showReturnBook(userId);
-		return list;
-	}
-
-	public List<LendBookEntity> getLateReturnedBooks(Integer userId) {
-		List<LendBookEntity> list = repository.getLateReturnedBooks(userId);
-		return list;
-	}
 
 }

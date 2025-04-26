@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import spring.library_gunel_aslanova.config.MyConfig;
 import spring.library_gunel_aslanova.entity.BookEntity;
-import spring.library_gunel_aslanova.entity.LendBookEntity;
-import spring.library_gunel_aslanova.entity.StudentEntity;
+import spring.library_gunel_aslanova.entity.ShowLendBookEntity;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.BookRepository;
@@ -43,6 +42,9 @@ public class BookService {
 
 	@Autowired
 	private StudentService studentService;
+
+	@Autowired
+	private ShowLendBookService showLendBookService;
 
 	@Autowired
 	private LendBookService lendBookService;
@@ -209,7 +211,7 @@ public class BookService {
 		re.setCount(req.getCount());
 		re.setLibrarianCode(userEntity.getUserId());
 		re.setMustReturnDate(req.getMustReturnDate());
-		re.setRegDate(LocalDate.of(2025, 03, 04));
+		re.setRegDate(LocalDate.now());
 		re.setReturnDate(null);
 		Integer id = lendBookService.lendBook(re);
 		re.setId(id);
@@ -224,29 +226,15 @@ public class BookService {
 		String username = userService.findUsername();
 		UserEntity en = userService.findByUsername(username);
 
-		List<LendBookEntity> list = lendBookService.showLendBook(en.getUserId());
-
+		List<ShowLendBookEntity> showLendBook = showLendBookService.showLendBook(en.getUserId());
 		List<ShowLendBookSingleResponse> res = new ArrayList<ShowLendBookSingleResponse>();
-		for (LendBookEntity s : list) {
+		for (ShowLendBookEntity s : showLendBook) {
 			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
 			mapper.map(s, r);
-			Optional<BookEntity> op = repository.findById(s.getBookCode());
-			if (!op.isPresent()) {
-				throw new MyException("bu idli kitab tapilmadi", null, "");
-			}
-			r.setBookName(op.get().getName());
-			StudentEntity op2 = studentService.findById(s.getStudentCode());
-			if (op2 == null) {
-				throw new MyException("bu idli sexs tapilmadi", null, "");
-			}
-			r.setStudentName(op2.getName());
-
 			r.setId(s.getId());
 			res.add(r);
 
-
 		}
-
 		ShowLendBookListResponse resp = new ShowLendBookListResponse();
 		resp.setResponses(res);
 		return resp;
@@ -255,29 +243,17 @@ public class BookService {
 	public ShowLendBookListResponse returnBook(ReturnBookRequest req) {
 
 		ShowLendBookListResponse showLendBook = showLendBook();
-		List<LendBookEntity> changeReturnDate = lendBookService.changeReturnDate(req);
+		List<ShowLendBookEntity> changeReturnDate = showLendBookService.changeReturnDate(req);
 
 		List<ShowLendBookSingleResponse> res = new ArrayList<>(showLendBook.getResponses());
 		List<ShowLendBookSingleResponse> resp = new ArrayList<ShowLendBookSingleResponse>();
 
-		for (LendBookEntity c : changeReturnDate) {
+		for (ShowLendBookEntity c : changeReturnDate) {
 			ShowLendBookSingleResponse s = new ShowLendBookSingleResponse();
 			mapper.map(c, s);
-			Optional<BookEntity> op = repository.findById(s.getBookCode());
-			if (!op.isPresent()) {
-				throw new MyException("bu idli kitab tapilmadi", null, "");
-			}
-			s.setBookName(op.get().getName());
-			StudentEntity op2 = studentService.findById(s.getStudentCode());
-			if (op2 == null) {
-				throw new MyException("bu idli sexs tapilmadi", null, "");
-			}
-			s.setStudentName(op2.getName());
-			s.setReturnDate(c.getReturnDate());
-
+			s.setReturnDate(req.getReturnDate());
 			resp.add(s);
 		}
-
 		showLendBook.setResponses(resp);
 		return showLendBook;
 	}
@@ -286,23 +262,12 @@ public class BookService {
 		String username = userService.findUsername();
 		UserEntity en = userService.findByUsername(username);
 
-		List<LendBookEntity> list = lendBookService.showReturnBook(en.getUserId());
+		List<ShowLendBookEntity> showReturnBook = showLendBookService.showReturnBook(en.getUserId());
 
 		List<ShowLendBookSingleResponse> res = new ArrayList<ShowLendBookSingleResponse>();
-		for (LendBookEntity s : list) {
+		for (ShowLendBookEntity s : showReturnBook) {
 			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
 			mapper.map(s, r);
-			Optional<BookEntity> op = repository.findById(s.getBookCode());
-			if (!op.isPresent()) {
-				throw new MyException("bu idli kitab tapilmadi", null, "");
-			}
-			r.setBookName(op.get().getName());
-			StudentEntity op2 = studentService.findById(s.getStudentCode());
-			if (op2 == null) {
-				throw new MyException("bu idli sexs tapilmadi", null, "");
-			}
-			r.setStudentName(op2.getName());
-
 			r.setId(s.getId());
 			res.add(r);
 		}
@@ -315,23 +280,12 @@ public class BookService {
 		String username = userService.findUsername();
 		UserEntity en = userService.findByUsername(username);
 
-		List<LendBookEntity> list = lendBookService.getLateReturnedBooks(en.getUserId());
+		List<ShowLendBookEntity> lateReturnedBooks = showLendBookService.getLateReturnedBooks(en.getUserId());
 
 		List<ShowLendBookSingleResponse> res = new ArrayList<ShowLendBookSingleResponse>();
-		for (LendBookEntity s : list) {
+		for (ShowLendBookEntity s : lateReturnedBooks) {
 			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
 			mapper.map(s, r);
-			Optional<BookEntity> op = repository.findById(s.getBookCode());
-			if (!op.isPresent()) {
-				throw new MyException("bu idli kitab tapilmadi", null, "");
-			}
-			r.setBookName(op.get().getName());
-			StudentEntity op2 = studentService.findById(s.getStudentCode());
-			if (op2 == null) {
-				throw new MyException("bu idli sexs tapilmadi", null, "");
-			}
-			r.setStudentName(op2.getName());
-
 			r.setId(s.getId());
 			res.add(r);
 		}

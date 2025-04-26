@@ -89,9 +89,6 @@ join students s on l.student_code = s.id
 join books b on l.book_code = b.id;
 
 
-insert into students
-(name,surname,phone,birthday,email,librarian_code) values
-('gunel1','aslanova1','12345','2012-09-07','asla@gmail.com',1),
 
 
 
