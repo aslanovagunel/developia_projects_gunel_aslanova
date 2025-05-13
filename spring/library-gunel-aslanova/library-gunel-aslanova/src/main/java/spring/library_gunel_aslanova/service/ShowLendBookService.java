@@ -44,4 +44,9 @@ public class ShowLendBookService {
 
 	}
 
+	public List<ShowLendBookEntity> getBorrowedBooks(Integer id) {
+		List<ShowLendBookEntity> list = repository.getBorrowedBooks(id);
+		return list;
+	}
+
 }

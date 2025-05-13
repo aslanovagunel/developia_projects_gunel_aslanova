@@ -3,6 +3,9 @@ package spring.library_gunel_aslanova.request;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -43,6 +46,7 @@ public class BookAddRequest {
 	private Double weight;
 
 	@Past(message = "Keçmiş tarix olmalıdır!")
+	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate publishDate;
 
 }

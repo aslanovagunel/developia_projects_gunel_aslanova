@@ -2,6 +2,9 @@ package spring.library_gunel_aslanova.request;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,5 +40,6 @@ public class LibrarianAddRequest {
 
 	@NotNull(message = "Doğum tarixi boş ola bilməz!")
 	@Past(message = "Doğum tarixi keçmişdə olmalıdır!")
+	@JsonDeserialize(using = LocalDateDeserializer.class)
 	private LocalDate birthday;
 }

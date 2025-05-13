@@ -1,6 +1,5 @@
 package spring.library_gunel_aslanova.service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +19,8 @@ import spring.library_gunel_aslanova.request.BookAddRequest;
 import spring.library_gunel_aslanova.request.BookFilterRequest;
 import spring.library_gunel_aslanova.request.BookFilterRequestForStudent;
 import spring.library_gunel_aslanova.request.BookUpdateRequest;
-import spring.library_gunel_aslanova.request.LendBookRequest;
-import spring.library_gunel_aslanova.request.ReturnBookRequest;
 import spring.library_gunel_aslanova.response.BookListResponse;
 import spring.library_gunel_aslanova.response.BookSingleResponse;
-import spring.library_gunel_aslanova.response.LendBookListResponse;
-import spring.library_gunel_aslanova.response.LendBookSingleResponse;
 import spring.library_gunel_aslanova.response.ShowLendBookListResponse;
 import spring.library_gunel_aslanova.response.ShowLendBookSingleResponse;
 import spring.library_gunel_aslanova.util.Message;
@@ -185,113 +180,64 @@ public class BookService {
 		return resp;
 	}
 
-	public LendBookListResponse lendBook(LendBookRequest req) {
 
-		studentService.findById(req.getStudentCode());
 
+	public BookListResponse getShowBooksForStudent(Integer begin, Integer length) {
+		BookListResponse resp = new BookListResponse();
+
+		List<BookEntity> en = repository.getShowBooksForStudent(begin, length);
+
+		List<BookSingleResponse> responses = new ArrayList<BookSingleResponse>();
+		for (BookEntity b : en) {
+			BookSingleResponse re = new BookSingleResponse();
+			mapper.map(b, re);
+			responses.add(re);
+		}
+		resp.setBooks(responses);
+
+		return resp;
+
+	}
+
+	public ShowLendBookListResponse getBorrowedBooks() {
 		String username = userService.findUsername();
-		UserEntity userEntity = userService.findByUsername(username);
+		UserEntity en = userService.findByUsername(username);
 
-		List<BookEntity> en = repository.lendBook(req.getBookCode());
-		if (en.isEmpty()) {
-			throw new MyException("bu id'li kitab tapilmadi", null, Message.ID_NOT_FOUND);
+		List<ShowLendBookEntity> list = showLendBookService.getBorrowedBooks(en.getUserId());
+		List<ShowLendBookSingleResponse> res = new ArrayList<ShowLendBookSingleResponse>();
+		for (ShowLendBookEntity s : list) {
+			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
+			mapper.map(s, r);
+			res.add(r);
 		}
+		ShowLendBookListResponse resp = new ShowLendBookListResponse();
+		resp.setResponses(res);
+		return resp;
+	}
 
-		BookEntity entity = en.get(0);
+	public Optional<BookEntity> findById(Integer bookCode) {
+		Optional<BookEntity> op = repository.findById(bookCode);
+		return op;
+	}
 
-		if (entity.getQuantity() < req.getCount()) {
-			throw new MyException("kifayet qeder kitab yoxdur", null, "kitab yoxdur");
-		}
-		entity.setQuantity(entity.getQuantity() - req.getCount());
+	public void save(BookEntity entity) {
 		repository.save(entity);
 
-		LendBookSingleResponse re = new LendBookSingleResponse();
-		re.setBookCode(entity.getId());
-		re.setStudentCode(req.getStudentCode());
-		re.setCount(req.getCount());
-		re.setLibrarianCode(userEntity.getUserId());
-		re.setMustReturnDate(req.getMustReturnDate());
-		re.setRegDate(LocalDate.now());
-		re.setReturnDate(null);
-		Integer id = lendBookService.lendBook(re);
-		re.setId(id);
-
-		LendBookListResponse resp = new LendBookListResponse();
-		resp.setResponses(List.of(re));
-
-		return resp;
 	}
 
-	public ShowLendBookListResponse showLendBook() {
-		String username = userService.findUsername();
-		UserEntity en = userService.findByUsername(username);
-
-		List<ShowLendBookEntity> showLendBook = showLendBookService.showLendBook(en.getUserId());
-		List<ShowLendBookSingleResponse> res = new ArrayList<ShowLendBookSingleResponse>();
-		for (ShowLendBookEntity s : showLendBook) {
-			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
-			mapper.map(s, r);
-			r.setId(s.getId());
-			res.add(r);
-
+	public BookListResponse searchBookWithFallback(String name) {
+		BookListResponse resp = new BookListResponse();
+		List<BookEntity> en = repository.searchBookWithFallback(name);
+		List<BookSingleResponse> responses = new ArrayList<BookSingleResponse>();
+		for (BookEntity b : en) {
+			BookSingleResponse re = new BookSingleResponse();
+			mapper.map(b, re);
+			responses.add(re);
 		}
-		ShowLendBookListResponse resp = new ShowLendBookListResponse();
-		resp.setResponses(res);
+		resp.setBooks(responses);
+
 		return resp;
-	}
 
-	public ShowLendBookListResponse returnBook(ReturnBookRequest req) {
-
-		ShowLendBookListResponse showLendBook = showLendBook();
-		List<ShowLendBookEntity> changeReturnDate = showLendBookService.changeReturnDate(req);
-
-		List<ShowLendBookSingleResponse> res = new ArrayList<>(showLendBook.getResponses());
-		List<ShowLendBookSingleResponse> resp = new ArrayList<ShowLendBookSingleResponse>();
-
-		for (ShowLendBookEntity c : changeReturnDate) {
-			ShowLendBookSingleResponse s = new ShowLendBookSingleResponse();
-			mapper.map(c, s);
-			s.setReturnDate(req.getReturnDate());
-			resp.add(s);
-		}
-		showLendBook.setResponses(resp);
-		return showLendBook;
-	}
-
-	public ShowLendBookListResponse showReturnBook() {
-		String username = userService.findUsername();
-		UserEntity en = userService.findByUsername(username);
-
-		List<ShowLendBookEntity> showReturnBook = showLendBookService.showReturnBook(en.getUserId());
-
-		List<ShowLendBookSingleResponse> res = new ArrayList<ShowLendBookSingleResponse>();
-		for (ShowLendBookEntity s : showReturnBook) {
-			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
-			mapper.map(s, r);
-			r.setId(s.getId());
-			res.add(r);
-		}
-		ShowLendBookListResponse resp = new ShowLendBookListResponse();
-		resp.setResponses(res);
-		return resp;
-	}
-
-	public ShowLendBookListResponse getLateReturnedBooks() {
-		String username = userService.findUsername();
-		UserEntity en = userService.findByUsername(username);
-
-		List<ShowLendBookEntity> lateReturnedBooks = showLendBookService.getLateReturnedBooks(en.getUserId());
-
-		List<ShowLendBookSingleResponse> res = new ArrayList<ShowLendBookSingleResponse>();
-		for (ShowLendBookEntity s : lateReturnedBooks) {
-			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
-			mapper.map(s, r);
-			r.setId(s.getId());
-			res.add(r);
-		}
-		ShowLendBookListResponse resp = new ShowLendBookListResponse();
-		resp.setResponses(res);
-		return resp;
 	}
 
 }

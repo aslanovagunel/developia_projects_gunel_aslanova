@@ -14,9 +14,11 @@ import spring.library_gunel_aslanova.entity.StudentEntity;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.StudentRepository;
+import spring.library_gunel_aslanova.request.SendBookRequest;
 import spring.library_gunel_aslanova.request.StudentAddRequest;
 import spring.library_gunel_aslanova.request.StudentFilterRequest;
 import spring.library_gunel_aslanova.request.StudentUpdateRequest;
+import spring.library_gunel_aslanova.response.SendAddBookResponse;
 import spring.library_gunel_aslanova.response.StudentListResponse;
 import spring.library_gunel_aslanova.response.StudentSingleResponse;
 import spring.library_gunel_aslanova.util.Message;
@@ -30,6 +32,9 @@ public class StudentService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private SuggestionService suggestionService;
 
 	@Autowired
 	private AuthorityService authorityService;
@@ -129,14 +134,27 @@ public class StudentService {
 		return resp;
 	}
 
-	public StudentEntity findById(Integer studentCode) {
+	public StudentEntity checkStudentExists(Integer studentCode) {
 		Optional<StudentEntity> op = repository.findById(studentCode);
 		if (!op.isPresent()) {
 			throw new MyException(Message.NAME_NOT_FOUND, null, Message.ID_NOT_FOUND);
 		}
 		StudentEntity en = op.get();
 		return en;
-
 	}
+
+	public SendAddBookResponse getRequestBook(SendBookRequest req) {
+		String username = userService.findUsername();
+		UserEntity en = userService.findByUsername(username);
+
+		StudentEntity entity = checkStudentExists(en.getUserId());
+
+		Integer id = suggestionService.getRequestBook(req, entity.getName());
+		SendAddBookResponse r = new SendAddBookResponse();
+		r.setId(id);
+		return r;
+	}
+
+	
 
 }

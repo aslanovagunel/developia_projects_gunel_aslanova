@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -21,11 +22,8 @@ import spring.library_gunel_aslanova.request.BookAddRequest;
 import spring.library_gunel_aslanova.request.BookFilterRequest;
 import spring.library_gunel_aslanova.request.BookFilterRequestForStudent;
 import spring.library_gunel_aslanova.request.BookUpdateRequest;
-import spring.library_gunel_aslanova.request.LendBookRequest;
-import spring.library_gunel_aslanova.request.ReturnBookRequest;
 import spring.library_gunel_aslanova.response.BookAddResponse;
 import spring.library_gunel_aslanova.response.BookListResponse;
-import spring.library_gunel_aslanova.response.LendBookListResponse;
 import spring.library_gunel_aslanova.response.ShowLendBookListResponse;
 import spring.library_gunel_aslanova.service.BookService;
 import spring.library_gunel_aslanova.util.Message;
@@ -86,38 +84,26 @@ public class BookController {
 		return  ResponseEntity.noContent().build();
 	}
 
-	@PostMapping(path = "/lend-book")
-	@PreAuthorize(value = "hasAuthority('ROLE_LEND_BOOK')")
-	public ResponseEntity<LendBookListResponse> lendBook(@RequestBody LendBookRequest req) {
-		LendBookListResponse resp = service.lendBook(req);
-		return new ResponseEntity<LendBookListResponse>(resp, HttpStatus.OK);
+	@GetMapping(path = "/begin/{begin}/length/{length}")
+	@PreAuthorize(value = "hasAuthority('ROLE_SHOW_BOOK_FOR_STUDENT')")
+	public ResponseEntity<BookListResponse> getShowBooksForStudent(@PathVariable Integer begin,
+			@PathVariable Integer length) {
+		BookListResponse resp = service.getShowBooksForStudent(begin, length);
+		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/show-lend-book")
-	@PreAuthorize(value = "hasAuthority('ROLE_SHOW_LEND_BOOK')")
-	public ResponseEntity<ShowLendBookListResponse> showLendBook() {
-		ShowLendBookListResponse resp = service.showLendBook();
+	@GetMapping(path = "/student-borrow-view")
+	@PreAuthorize(value = "hasAuthority('ROLE_STUDENT_BORROW_VIEW')")
+	public ResponseEntity<ShowLendBookListResponse> getBorrowedBooks() {
+		ShowLendBookListResponse resp = service.getBorrowedBooks();
 		return new ResponseEntity<ShowLendBookListResponse>(resp, HttpStatus.OK);
 	}
 
-	@PutMapping(path = "/return-book")
-	@PreAuthorize(value = "hasAuthority('ROLE_RETURN_BOOK')")
-	public ResponseEntity<ShowLendBookListResponse> returnBook(@RequestBody ReturnBookRequest req) {
-		ShowLendBookListResponse resp = service.returnBook(req);
-		return new ResponseEntity<ShowLendBookListResponse>(resp, HttpStatus.OK);
+	@GetMapping(path = "/search-book-fallback")
+	@PreAuthorize(value = "hasAuthority('ROLE_SEARCH_BOOK_FALLBACK')")
+	public ResponseEntity<BookListResponse> searchBookWithFallback(@RequestParam String name) {
+		BookListResponse resp = service.searchBookWithFallback(name);
+		return new ResponseEntity<BookListResponse>(resp, HttpStatus.OK);
 	}
 
-	@GetMapping(path = "/show-return-book")
-	@PreAuthorize(value = "hasAuthority('ROLE_SHOW_RETURN_BOOK')")
-	public ResponseEntity<ShowLendBookListResponse> showReturnBook() {
-		ShowLendBookListResponse resp = service.showReturnBook();
-		return new ResponseEntity<ShowLendBookListResponse>(resp, HttpStatus.OK);
-	}
-
-	@GetMapping(path = "/show-late-return-book")
-	@PreAuthorize(value = "hasAuthority('ROLE_LATE_RETURN_BOOK')")
-	public ResponseEntity<ShowLendBookListResponse> getLateReturnedBooks() {
-		ShowLendBookListResponse resp = service.getLateReturnedBooks();
-		return new ResponseEntity<ShowLendBookListResponse>(resp, HttpStatus.OK);
-	}
 }

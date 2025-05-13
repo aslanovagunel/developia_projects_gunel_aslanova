@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import spring.library_gunel_aslanova.exception.MyException;
+import spring.library_gunel_aslanova.request.SendBookRequest;
 import spring.library_gunel_aslanova.request.StudentAddRequest;
 import spring.library_gunel_aslanova.request.StudentFilterRequest;
 import spring.library_gunel_aslanova.request.StudentUpdateRequest;
+import spring.library_gunel_aslanova.response.SendAddBookResponse;
 import spring.library_gunel_aslanova.response.StudentAddResponse;
 import spring.library_gunel_aslanova.response.StudentListResponse;
 import spring.library_gunel_aslanova.response.StudentUpdateResponse;
@@ -71,4 +73,16 @@ public class StudentController {
 		StudentListResponse resp = service.search(req);
 		return new ResponseEntity<StudentListResponse>(resp, HttpStatus.CREATED);
 	}
+
+	@PostMapping(path = "/request-book")
+	@PreAuthorize(value = "hasAuthority('ROLE_REQUEST_BOOK')")
+	public ResponseEntity<SendAddBookResponse> getRequestBook(@RequestBody SendBookRequest req) {
+
+		SendAddBookResponse resp = service.getRequestBook(req);
+		return new ResponseEntity<SendAddBookResponse>(resp, HttpStatus.CREATED);
+	}
+
+
+
+
 }

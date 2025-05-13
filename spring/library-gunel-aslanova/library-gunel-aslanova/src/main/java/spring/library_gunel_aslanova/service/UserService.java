@@ -1,5 +1,7 @@
 package spring.library_gunel_aslanova.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -9,11 +11,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import spring.library_gunel_aslanova.entity.SuggestionEntity;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.repository.UserRepository;
 import spring.library_gunel_aslanova.request.LibrarianAddRequest;
 import spring.library_gunel_aslanova.request.StudentAddRequest;
+import spring.library_gunel_aslanova.response.SendListBookResponse;
+import spring.library_gunel_aslanova.response.SendSingleBookResponse;
 import spring.library_gunel_aslanova.util.Message;
 
 @Service
@@ -27,7 +32,13 @@ public class UserService {
 	private LibrarianService librarianService;
 
 	@Autowired
+	private ShowLendBookService showLendBookService;
+
+	@Autowired
 	private AuthorityService authorityService;
+
+	@Autowired
+	private SuggestionService suggestionService;
 
 	@Autowired
 	private ModelMapper mapper;
@@ -88,6 +99,19 @@ public class UserService {
 		en.setEnabled(true);
 		repository.save(en);
 		
+	}
+
+	public SendListBookResponse getShowSuggestion() {
+		SendListBookResponse resp = new SendListBookResponse();
+		List<SuggestionEntity> list = suggestionService.getShowSuggestion();
+		List<SendSingleBookResponse> l = new ArrayList<SendSingleBookResponse>();
+		for (SuggestionEntity s : list) {
+			SendSingleBookResponse r = new SendSingleBookResponse();
+			mapper.map(s, r);
+			l.add(r);
+		}
+		resp.setBooks(l);
+		return resp;
 	}
 
 }
