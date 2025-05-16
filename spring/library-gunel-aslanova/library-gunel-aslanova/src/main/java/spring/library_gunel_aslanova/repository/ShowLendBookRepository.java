@@ -23,5 +23,8 @@ public interface ShowLendBookRepository extends JpaRepository<ShowLendBookEntity
 
 	@Query(value = "select * from show_lend_books where student_code=?1", nativeQuery = true)
 	List<ShowLendBookEntity> getBorrowedBooks(Integer id);
+
+	@Query(value = "select * from show_lend_books where return_date is not null and return_date > must_return_date and must_return_date < CURRENT_DATE", nativeQuery = true)
+	List<ShowLendBookEntity> getAllLateReturnedBooks();
 }
 

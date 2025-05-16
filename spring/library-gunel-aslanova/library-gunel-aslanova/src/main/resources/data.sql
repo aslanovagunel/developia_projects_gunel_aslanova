@@ -18,6 +18,8 @@ insert into authority_list
 ('ROLE_STUDENT_BORROW_VIEW',0,1),  
 ('ROLE_SHOW_SUGGESTION',1,0),
 ('ROLE_SEARCH_BOOK_FALLBACK',0,1),
+('ROLE_SEND_EMAIL',1,0),
+('ROLE_SEND_EMAILI',1,0),
 ('ROLE_REQUEST_BOOK',0,1),
 ('ROLE_LATE_RETURN_BOOK',1,0);
 
@@ -54,10 +56,10 @@ insert into librarians
 
 insert into students
 (name,surname,phone,birthday,email,librarian_code) values
-('gunel1','aslanova1','12345','2012-09-07','asla@gmail.com',1),
-('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com',2),
-('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com',1),
-('Vusal','Hüseynova','12345','2012-09-07','asla@gmail.com',1);
+('gunel1','aslanova1','12345','2012-09-07','aslanovagunel409@gmail.com',1),
+('Vusal','Hüseynova','12345','2012-09-07','aslanovagunel409@gmail.com',2),
+('Vusal','Hüseynova','12345','2012-09-07','aslanovagunel409@gmail.com',1),
+('Vusal','Hüseynova','12345','2012-09-07','nnecefova6@std.beu.edu.az',2);
 
 insert into books
 (name,description,price,author,color,page_count,quantity,weight,publish_date,librarian_code,student_code,category_id) values

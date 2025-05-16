@@ -49,4 +49,9 @@ public class ShowLendBookService {
 		return list;
 	}
 
+	public List<ShowLendBookEntity> getAllLateReturnedBooks() {
+		List<ShowLendBookEntity> all = repository.getAllLateReturnedBooks();
+		return all;
+	}
+
 }

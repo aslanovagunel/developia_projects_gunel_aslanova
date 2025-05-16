@@ -32,9 +32,6 @@ public class UserService {
 	private LibrarianService librarianService;
 
 	@Autowired
-	private ShowLendBookService showLendBookService;
-
-	@Autowired
 	private AuthorityService authorityService;
 
 	@Autowired
@@ -42,7 +39,6 @@ public class UserService {
 
 	@Autowired
 	private ModelMapper mapper;
-
 
 	public Integer addLibrarian(LibrarianAddRequest req) {
 
@@ -113,6 +109,7 @@ public class UserService {
 		resp.setBooks(l);
 		return resp;
 	}
+
 
 }
 

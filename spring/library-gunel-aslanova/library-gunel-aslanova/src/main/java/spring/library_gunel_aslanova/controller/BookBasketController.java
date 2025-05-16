@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import spring.library_gunel_aslanova.request.LendBookRequest;
 import spring.library_gunel_aslanova.request.ReturnBookRequest;
 import spring.library_gunel_aslanova.response.LendBookListResponse;
 import spring.library_gunel_aslanova.response.ShowLendBookListResponse;
 import spring.library_gunel_aslanova.service.BookBasketService;
+import spring.library_gunel_aslanova.service.EmailService;
 
 @RestController
 @RequestMapping(path = "/basket")
@@ -23,6 +26,9 @@ public class BookBasketController {
 
 	@Autowired
 	private BookBasketService service;
+
+	@Autowired
+	private EmailService emailService;
 
 	@PostMapping(path = "/lend-book")
 	@PreAuthorize(value = "hasAuthority('ROLE_LEND_BOOK')")
@@ -59,4 +65,17 @@ public class BookBasketController {
 		return new ResponseEntity<ShowLendBookListResponse>(resp, HttpStatus.OK);
 	}
 
+	@PostMapping(path = "/send-email")
+	@PreAuthorize(value = "hasAuthority('ROLE_SEND_EMAIL')")
+	public ResponseEntity<String> sendEmail() throws JsonProcessingException {
+		service.sendEmail();
+		return ResponseEntity.ok("mesaj gonderildi");
+	}
+
+	@PostMapping(path = "/send-emailii")
+	@PreAuthorize(value = "hasAuthority('ROLE_SEND_EMAILI')")
+	public ResponseEntity<String> sendEmailii() {
+		emailService.sendOverdueEmail("aslanovagunel409@gmai.coml", "gunel", "kitabi qaytar");
+		return ResponseEntity.ok("mesaj gonderildi");
+	}
 }

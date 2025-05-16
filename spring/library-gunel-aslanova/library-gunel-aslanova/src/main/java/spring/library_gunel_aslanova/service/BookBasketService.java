@@ -9,10 +9,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import jakarta.transaction.Transactional;
 import spring.library_gunel_aslanova.config.MyConfig;
 import spring.library_gunel_aslanova.entity.BookEntity;
 import spring.library_gunel_aslanova.entity.ShowLendBookEntity;
+import spring.library_gunel_aslanova.entity.StudentEntity;
 import spring.library_gunel_aslanova.entity.UserEntity;
 import spring.library_gunel_aslanova.exception.MyException;
 import spring.library_gunel_aslanova.request.LendBookRequest;
@@ -43,16 +46,13 @@ public class BookBasketService {
 	private StudentService studentService;
 
 	@Autowired
-	private SuggestionService suggestionService;
-
-	@Autowired
-	private AuthorityService authorityService;
-
-	@Autowired
 	private ModelMapper mapper;
 
 	@Autowired
 	private MyConfig myConfig;
+
+	@Autowired
+	private EmailService emailService;
 
 	public LendBookListResponse lendBook(LendBookRequest req) {
 
@@ -158,6 +158,34 @@ public class BookBasketService {
 			r.setId(s.getId());
 			res.add(r);
 		}
+		ShowLendBookListResponse resp = new ShowLendBookListResponse();
+		resp.setResponses(res);
+		return resp;
+	}
+
+	public void sendEmail() throws JsonProcessingException {
+		ShowLendBookListResponse resp = getAllLateReturnedBooks();
+
+		List<ShowLendBookSingleResponse> list = resp.getResponses();
+
+		for (ShowLendBookSingleResponse s : list) {
+			StudentEntity en = studentService.checkStudentExists(s.getStudentCode());
+			emailService.sendOverdueEmail(en.getEmail(), en.getName(), "kitab haqqinda melumat");
+		}
+
+	}
+
+	private ShowLendBookListResponse getAllLateReturnedBooks() {
+		List<ShowLendBookEntity> lateReturnedBooks = showLendBookService.getAllLateReturnedBooks();
+
+		List<ShowLendBookSingleResponse> res = new ArrayList<>();
+		for (ShowLendBookEntity s : lateReturnedBooks) {
+			ShowLendBookSingleResponse r = new ShowLendBookSingleResponse();
+			mapper.map(s, r);
+			r.setId(s.getId());
+			res.add(r);
+		}
+
 		ShowLendBookListResponse resp = new ShowLendBookListResponse();
 		resp.setResponses(res);
 		return resp;
