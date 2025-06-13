@@ -1,0 +1,6 @@
+2025-06-06 14:56:30 [HikariPool-7 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-7 - Thread starvation or clock leap detected (housekeeper delta=19h2m17s338ms117µs500ns).
+2025-06-06 16:44:43 [HikariPool-7 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-7 - Thread starvation or clock leap detected (housekeeper delta=33m8s258ms304µs500ns).
+2025-06-06 16:50:26 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-06-06 16:50:27 [SpringApplicationShutdownHook] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-224]
+2025-06-06 16:50:27 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown initiated...
+2025-06-06 16:50:27 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown completed.
